@@ -1,4 +1,6 @@
-/* Tailwind directives removed. Make sure Tailwind is set up in your build process if you want to use them. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Add to src/app/globals.css */
 section {
