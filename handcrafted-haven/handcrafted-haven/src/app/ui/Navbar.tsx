@@ -10,8 +10,8 @@ const Navbar = () => {
         <div>
 
           <div className="flex justify-around">
-            <Link href="/marketplace" className="hover:text-blue-300 text-2xl">
-              Marketplace
+            <Link href="/products" className="hover:text-blue-300 text-2xl">
+              Products
             </Link>
             <Link href="/artisans" className="hover:text-blue-300 text-2xl">
               Artisans
