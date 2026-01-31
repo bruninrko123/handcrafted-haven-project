@@ -3,10 +3,18 @@
 import { useState } from "react";
 import { Product } from "@/types/product";
 import { useProducts } from "@/context/ProductContext";
+import { useAuth } from "@/context/AuthContext";
+import { redirect } from "next/navigation";
 
 export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
+
+  const { isSeller } = useAuth();
+
+  if (!isSeller) {
+    redirect("/");
+  }
 
   const CATEGORIES = [
     "Home Decor",
