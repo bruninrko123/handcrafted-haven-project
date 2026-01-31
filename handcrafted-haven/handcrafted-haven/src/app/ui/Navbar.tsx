@@ -10,16 +10,16 @@ const Navbar = () => {
         <div>
 
           <div className="flex justify-around">
-            <Link href="/marketplace" className="hover:text-green-600 text-2xl">
+            <Link href="/marketplace" className="hover:text-blue-300 text-2xl">
               Marketplace
             </Link>
-            <Link href="/artisans" className="hover:text-green-600 text-2xl">
+            <Link href="/artisans" className="hover:text-blue-300 text-2xl">
               Artisans
             </Link>
-            <Link href="/categories" className="hover:text-green-600 text-2xl">
+            <Link href="/categories" className="hover:text-blue-300 text-2xl">
               Categories
             </Link>
-            <Link href="/about" className="hover:text-green-600 text-2xl">
+            <Link href="/about" className="hover:text-blue-300 text-2xl">
               Our Story
             </Link>
           </div>
