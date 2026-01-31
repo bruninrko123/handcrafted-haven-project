@@ -37,8 +37,14 @@ export default function ProductsPage() {
         >
           <option value="All">All Categories</option>
           <option value="Home Decor">Home Decor</option>
-          <option value="Kitchen">Kitchen</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Art">Art</option>
           <option value="Accessories">Accessories</option>
+          <option value="Kitchen">Kitchen</option>
+          <option value="Jewelry">Jewelry</option>
+          <option value="Other">Other</option>
+
+          
         </select>
     
         {/* Price Filter */}
