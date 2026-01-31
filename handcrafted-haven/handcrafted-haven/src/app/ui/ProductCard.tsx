@@ -1,8 +1,10 @@
 import Image from "next/image";
-
 import { Product } from "@/types/product";
+import { useCart } from "@/context/CartContext";
 
 export default function ProductCard({ product }: { product: Product }) {
+  const { addToCart } = useCart();
+
   return (
     <div className="border rounded-lg p-4 shadow-sm bg-white flex flex-col">
       {/* Image container */}
@@ -34,7 +36,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {/* Add to Cart button */}
       <button
-        onClick={() => addToCart(product)}
+        onClick={() => addToCart({ ...product, id: Number(product.id) })}
         className="mt-auto w-full bg-[#6B4F3F] text-white py-2 rounded-md hover:opacity-90"
       >
         Add to Cart
