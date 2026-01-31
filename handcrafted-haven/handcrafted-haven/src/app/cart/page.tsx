@@ -25,7 +25,15 @@ export default function CartPage() {
               key={item.id}
               className="flex justify-between items-center bg-white p-4 rounded shadow"
             >
-              <div>
+              {/* PRODUCT IMAGE */}
+              <img
+                src={item.imageUrl}
+                alt={item.name}
+                className="w-20 h-20 object-cover rounded"
+              />
+
+              {/* PRODUCT INFO */}
+              <div className="flex-1">
                 <h2 className="text-lg font-semibold">{item.name}</h2>
                 <p className="text-sm text-gray-600">
                   ${item.price} × {item.quantity}
@@ -35,6 +43,7 @@ export default function CartPage() {
                 </p>
               </div>
 
+              {/* QUANTITY CONTROLS */}
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => decreaseQuantity(item.id)}

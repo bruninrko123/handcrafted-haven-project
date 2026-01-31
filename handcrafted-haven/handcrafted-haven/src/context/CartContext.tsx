@@ -3,16 +3,13 @@
 import { createContext, useContext, useState, useEffect  } from "react";
 import { Product } from "@/types/product";
 
-type CartItem = {
-  id: number;
-  name: string;
-  price: number;
+type CartItem = Product & {
   quantity: number;
 };
 
 type CartContextType = {
   cart: CartItem[];
-  addToCart: (product: Omit<CartItem, "quantity">) => void;
+  addToCart: (product: Product) => void;
   removeFromCart: (id: number) => void;
   increaseQuantity: (id: number) => void;
   decreaseQuantity: (id: number) => void;
@@ -57,8 +54,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     );
   };
 
-  // ✅ ADD TO CART
-  const addToCart = (product: Omit<CartItem, "quantity">) => {
+  // ADD TO CART
+  const addToCart = (product: Product) => {
     setCart((prev) => {
       const existingItem = prev.find(item => item.id === product.id);
 

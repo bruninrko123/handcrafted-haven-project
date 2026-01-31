@@ -36,8 +36,8 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {/* Add to Cart button */}
       <button
-        onClick={() => addToCart({ ...product, id: Number(product.id) })}
-        className="mt-auto w-full bg-[#6B4F3F] text-white py-2 rounded-md hover:opacity-90"
+        onClick={() => addToCart(product)}
+        className="mt-4 bg-[#6B4F3F] text-white px-4 py-2 rounded"
       >
         Add to Cart
       </button>
