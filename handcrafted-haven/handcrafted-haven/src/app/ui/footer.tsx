@@ -8,24 +8,17 @@ export default function Footer() {
   });
 
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="container mx-auto px-6 py-10">
-        
-        {/* Top row */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          
-          {/* Branding / copyright */}
-          <p className="text-sm text-gray-400">
+    <footer>
+      
+
+        <div>
+
+          <p>
             © {new Date().getFullYear()} Handcrafted Haven · Last updated {buildDate}
           </p>
 
-          {/* Social icons */}
-          <div className="flex items-center gap-6">
-            <a
-              href="#"
-              aria-label="Instagram"
-              className="hover:opacity-80 transition-opacity"
-            >
+          <div className="flex justify-self-center justify-around w-[200px]">
+            <a href="#" aria-label="Instagram">
               <Image
                 alt="Instagram icon"
                 src="/icons/instagram.png"
@@ -34,11 +27,7 @@ export default function Footer() {
               />
             </a>
 
-            <a
-              href="#"
-              aria-label="X / Twitter"
-              className="hover:opacity-80 transition-opacity"
-            >
+            <a href="#" aria-label="X / Twitter">
               <Image
                 alt="X icon"
                 src="/icons/X.png"
@@ -47,11 +36,7 @@ export default function Footer() {
               />
             </a>
 
-            <a
-              href="#"
-              aria-label="WhatsApp"
-              className="hover:opacity-80 transition-opacity"
-            >
+            <a href="#" aria-label="WhatsApp">
               <Image
                 alt="WhatsApp icon"
                 src="/icons/whats.png"
@@ -62,11 +47,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="mt-8 border-t border-gray-800 pt-6 text-center text-sm text-gray-500">
+        <div>
           Crafted with care · Supporting artisans worldwide
         </div>
-      </div>
+      
     </footer>
   );
 }

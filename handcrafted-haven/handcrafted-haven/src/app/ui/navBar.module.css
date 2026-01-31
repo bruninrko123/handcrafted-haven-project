@@ -1,0 +1,10 @@
+.navLinks{
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.5rem;
+
+    & a:hover {
+        text-decoration: underline;
+        color: rgb(0, 122, 0);
+    }
+}
