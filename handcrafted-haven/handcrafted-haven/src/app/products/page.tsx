@@ -2,8 +2,11 @@
 import { useState } from "react";
 import ProductCard from "@/app/ui/ProductCard";
 import { products } from "@/data/products";
+import { useProducts } from "@/context/ProductContext";
 
 export default function ProductsPage() {
+  const { products } = useProducts();
+
   const [category, setCategory] = useState("All");
   const [maxPrice, setMaxPrice] = useState(100); // Adjust later to fit your price range
 
@@ -24,7 +27,7 @@ export default function ProductsPage() {
       
 
       {/* Filters */}
-      
+
       <section className="mb-6 flex flex-col sm:flex-row gap-4">
         {/* Category Filter */}
         <select
