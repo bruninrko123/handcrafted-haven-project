@@ -10,9 +10,9 @@ export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
 
-  const { isSeller } = useAuth();
+  const { isArtisan } = useAuth();
 
-  if (!isSeller) {
+  if (!isArtisan) {
     redirect("/");
   }
 
@@ -68,7 +68,7 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-yellow-50 p-6">
-      <h1 className="text-3xl font-bold mb-6">Seller Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6">Artisan Dashboard</h1>
 
       <p className="text-gray-600 mb-4">Manage your products</p>
 
