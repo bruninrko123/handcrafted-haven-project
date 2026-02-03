@@ -7,7 +7,7 @@ export default withAuth(
         const token = req.nextauth.token;
         const path = req.nextUrl.pathname;
 
-        if (path.startsWith("/dashboard") && token?.role !== "seller" && token?.role !== "artisan") {
+        if (path.startsWith("/dashboard") && token?.role !== "artisan") {
             return NextResponse.redirect(new URL("/", req.url));
         }
 

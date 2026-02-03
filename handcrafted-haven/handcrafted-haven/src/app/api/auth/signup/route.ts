@@ -35,7 +35,7 @@ export async function POST(request: Request) {
             email,
             password: hashedPassword,
             name,
-            role: role || "buyer" || "seller" || "artisan",
+            role: role || "buyer",
         })
 
         return NextResponse.json(

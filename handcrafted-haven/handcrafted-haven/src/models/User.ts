@@ -16,7 +16,7 @@ const UserSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ["seller", "artisan", "buyer"]
+        enum: ["artisan", "buyer"]
     },
     createdAt: {
         type: Date,

@@ -20,7 +20,6 @@ export function useAuth() {
 
     isArtisan: session?.user.role === "artisan",
 
-    isSeller: session?.user.role === "seller",
 
     isBuyer: session?.user.role === "buyer",
 

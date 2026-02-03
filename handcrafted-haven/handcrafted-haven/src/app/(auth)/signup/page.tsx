@@ -32,7 +32,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex items-center justify-center">
       <form
         onSubmit={handleSubmit}
         className="bg-gray-400 justify-self-center mt-5 w-[400px] rounded p-2"
@@ -56,7 +56,6 @@ export default function SignUpPage() {
           className="block h-[45px] rounded mb-5 w-full p-2"
         >
           <option value="buyer">Buyer</option>
-          <option value="seller">Seller</option>
           <option value="artisan">Artisan</option>
         </select>
 
@@ -84,7 +83,7 @@ export default function SignUpPage() {
 
         {error && <p className="text-red-500">{error}</p>}
 
-        <button type="submit" className=" bg-gray-300 p-4 rounded">
+        <button type="submit" className=" bg-blue-600 p-4 rounded w-full hover:bg-blue-700 text-white font-medium py-3">
           Sign Up
         </button>
       </form>

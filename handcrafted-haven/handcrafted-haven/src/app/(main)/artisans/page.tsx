@@ -1,5 +1,5 @@
-import Navbar from "../ui/Navbar";
-import ArtisansList from '@/app/ui/artisans/artisansList'
+import Navbar from "../../ui/Navbar";
+import ArtisansList from "@/app/ui/artisans/artisansList";
 export default function ArtisansPage() {
   return (
     <>
