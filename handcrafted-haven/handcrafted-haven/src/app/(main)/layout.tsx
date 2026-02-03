@@ -30,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    
+      
         <AuthProvider>
           <CartProvider>
             <ProductProvider>
@@ -41,7 +41,7 @@ export default function RootLayout({
             </ProductProvider>
           </CartProvider>
         </AuthProvider>
-      </body>
-    </html>
+      
+   
   );
 }
