@@ -5,6 +5,7 @@ import { Product } from "@/types/product";
 import { useProducts } from "@/context/ProductContext";
 import { useAuth } from "@/context/AuthContext";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 
 export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
@@ -26,14 +27,14 @@ export default function DashboardPage() {
     "Other",
   ];
 
-  const [formData, setFormData] = useState<Product>({
+  const [formData, setFormData] = useState<Product>(()=> ({
     id: Date.now(),
     name: "",
     description: "",
     price: 0,
     category: "",
     imageUrl: "",
-  });
+  }));
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -154,7 +155,7 @@ export default function DashboardPage() {
             key={product.id}
             className="bg-white p-4 rounded shadow flex gap-4"
           >
-            <img
+            <Image
               src={product.imageUrl || "/placeholder.png"}
               alt={product.name}
               className="w-20 h-20 object-cover rounded"
