@@ -1,47 +1,35 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { SessionProvider, useSession, signIn, signOut } from "next-auth/react";
 
-type AuthContextType = {
-  isSeller: boolean;
-  loginAsSeller: () => void;
-  logout: () => void;
-};
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isSeller, setIsSeller] = useState(false);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  return <SessionProvider>{children}</SessionProvider>
+}
 
-  // Load seller auth from localStorage on mount
-  useEffect(() => {
-    const storedSeller = localStorage.getItem("isSeller");
-    if (storedSeller === "true") {
-      setIsSeller(true);
-    }
-  }, []);
+export function useAuth() {
+  const { data: session, status } = useSession();
 
-  const loginAsSeller = () => {
-    setIsSeller(true);
-    localStorage.setItem("isSeller", "true");
-  };
+  return {
+    user: session?.user,
 
-  const logout = () => {
-    setIsSeller(false);
-    localStorage.removeItem("isSeller");
-  };
+    isLoading: status === "loading",
 
-  return (
-    <AuthContext.Provider value={{ isSeller, loginAsSeller, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+    isAuthenticated: status === "authenticated",
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    isArtisan: session?.user.role === "artisan",
+
+    isSeller: session?.user.role === "seller",
+
+    isBuyer: session?.user.role === "buyer",
+
+    //trigger login
+    signIn,
+
+    //function to log out
+    signOut,
+
+
   }
-  return context;
-};
+}

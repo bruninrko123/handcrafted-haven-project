@@ -6,6 +6,7 @@ import Footer from "@/app/ui/footer";
 import { CartProvider } from "@/context/CartContext";
 import { ProductProvider } from "@/context/ProductContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { SessionProvider } from 'next-auth/react';
 
 
 
