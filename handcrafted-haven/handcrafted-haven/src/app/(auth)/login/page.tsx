@@ -3,17 +3,29 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { FormInput } from "@/app/ui/FormInput";
+
+
+
+type FieldErrors = {
+    email?: string;
+    password?: string;
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+    const [errors, setErrors] = useState<FieldErrors>({});
+    const [serverError, setServerError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+      setErrors({});
+      setServerError("");
 
+
+      
     const result = await signIn("credentials", {
       email,
       password,
@@ -21,7 +33,7 @@ export default function LoginPage() {
     });
 
     if (result?.error) {
-      setError(result.error);
+      setServerError("invalid email or password");
     } else {
       router.push("/"); // redirect if successfull
     }
@@ -33,26 +45,29 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="bg-gray-400 justify-self-center mt-5 w-[400px] rounded p-2"
       >
-        <label htmlFor="name">Full Name:</label>
-        <input
-          id="name"
+        <FormInput
+          id="email"
+          label="Email:"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          className="block h-[45px] rounded mb-5 w-full p-2"
+          placeholder="example@email.com"
+          required
         />
-        <label htmlFor="password">Password:</label>
-        <input
+       
+
+        <FormInput
           id="password"
+          label="Password:"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          className="block h-[45px] rounded mb-5 w-full p-2"
+          placeholder="Type your password"
+          required
         />
+        
 
-        {error && <p className="text-red-500">{error}</p>}
+        {serverError && <p className="text-red-500">{serverError}</p>}
         <button
           type="submit"
           className=" bg-blue-600 p-4 rounded w-full hover:bg-blue-700 text-white font-medium py-3"

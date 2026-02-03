@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import Link from 'next/link';
-import { ShoppingBag, User, Search, Menu, LogOut, LogIn } from 'lucide-react';
+import { ShoppingBag, User, Search, Menu, LogOut } from 'lucide-react';
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 
@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
 
-  const { isAuthenticated, isArtisan, user, signIn, signOut, isLoading } = useAuth();
+  const { isAuthenticated, isArtisan, user, signOut, isLoading } = useAuth();
   const { cart } = useCart();
 
  

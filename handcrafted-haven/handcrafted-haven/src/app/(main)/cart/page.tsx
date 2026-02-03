@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-
+import Image from "next/image";
 
 export default function CartPage() {
   const { cart, removeFromCart, increaseQuantity, decreaseQuantity } = useCart();
@@ -26,7 +26,7 @@ export default function CartPage() {
               className="flex justify-between items-center bg-white p-4 rounded shadow"
             >
               {/* PRODUCT IMAGE */}
-              <img
+              <Image
                 src={item.imageUrl}
                 alt={item.name}
                 className="w-20 h-20 object-cover rounded"
