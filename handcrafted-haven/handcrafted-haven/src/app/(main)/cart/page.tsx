@@ -29,6 +29,8 @@ export default function CartPage() {
               <Image
                 src={item.imageUrl}
                 alt={item.name}
+                width={80}
+                height={80}
                 className="w-20 h-20 object-cover rounded"
               />
 
