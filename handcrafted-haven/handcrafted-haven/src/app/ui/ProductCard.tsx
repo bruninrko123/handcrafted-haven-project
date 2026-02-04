@@ -10,7 +10,7 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Image container */}
 
       <div className="relative w-full aspect-[4/3] bg-gray-100 flex items-center justify-center">
-        <Image 
+        <Image
         src={product.imageUrl}
         alt={product.name}
         fill
