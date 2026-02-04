@@ -6,40 +6,64 @@ import { Product } from "@/types/product";
 type ProductContextType = {
   products: Product[];
   addProduct: (product: Product) => void;
-  removeProduct: (id: number) => void;
+  removeProduct: (id: string) => void;
   updateProduct: (product: Product) => void;
-  
 };
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-export const ProductProvider = ({ children }: { children: React.ReactNode }) => {
-  const [products, setProducts] = useState<Product[]>(() => {
-    if (typeof window !== "undefined") {
-      const storedProducts = localStorage.getItem("products");
-      return storedProducts ? JSON.parse(storedProducts) : [];
-    }
-    return [];
-  });
+export const ProductProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    localStorage.setItem("products", JSON.stringify(products));
-  }, [products]);
+    const fetchProducts = async () => {
+    try {
+        const res = await fetch("/api/products");
+        const data = await res.json();
+        setProducts(data);
+      
+      } catch (error) {
+        console.log("Failed to fetch products", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const addProduct = async (product: Omit<Product, '_id'>) => {
+    try {
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product),
+      });
+
+      if (res.ok) {
+        const productsRes = await fetch("/api/products");
+        const products = await productsRes.json();
+        setProducts(products);
+      }
 
 
-  const addProduct = (product: Product) => {
-    setProducts(prev => [...prev, product]);
+
+    } catch (error) {
+      console.error("Something went wront with adding the product", error);
+
+    }
   };
 
-  const removeProduct = (id: number) => {
-    setProducts(prev => prev.filter(product => product.id !== id));
+  const removeProduct = (id: string) =>{
+    setProducts((prev) => prev.filter((product) => product._id !== id));
   };
 
   const updateProduct = (updatedProduct: Product) => {
-    setProducts(prev =>
-      prev.map(product =>
-        product.id === updatedProduct.id ? updatedProduct : product
-      )
+    setProducts((prev) =>
+      prev.map((product) =>
+        product._id === updatedProduct._id ? updatedProduct : product,
+      ),
     );
   };
 
@@ -49,7 +73,7 @@ export const ProductProvider = ({ children }: { children: React.ReactNode }) => 
         products,
         addProduct,
         removeProduct,
-        updateProduct
+        updateProduct,
       }}
     >
       {children}
@@ -64,4 +88,3 @@ export const useProducts = () => {
   }
   return context;
 };
-

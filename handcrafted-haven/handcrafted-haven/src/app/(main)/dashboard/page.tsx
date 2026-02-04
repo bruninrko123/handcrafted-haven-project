@@ -9,7 +9,7 @@ import Image from "next/image";
 
 export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
-  const [editingProductId, setEditingProductId] = useState<number | null>(null);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
 
   const { isArtisan } = useAuth();
 
@@ -28,7 +28,6 @@ export default function DashboardPage() {
   ];
 
   const [formData, setFormData] = useState<Product>(()=> ({
-    id: Date.now(),
     name: "",
     description: "",
     price: 0,
@@ -54,11 +53,11 @@ export default function DashboardPage() {
       updateProduct(formData);
       setEditingProductId(null);
     } else {
-      addProduct({ ...formData, id: Date.now() });
+      addProduct({ ...formData });
     }
 
     setFormData({
-      id: Date.now(),
+      
       name: "",
       description: "",
       price: 0,
@@ -152,7 +151,7 @@ export default function DashboardPage() {
       <div className="space-y-4">
         {products.map((product) => (
           <div
-            key={product.id}
+            key={product._id}
             className="bg-white p-4 rounded shadow flex gap-4"
           >
             <Image
@@ -176,7 +175,7 @@ export default function DashboardPage() {
               <button
                 onClick={() => {
                   setFormData(product);
-                  setEditingProductId(product.id);
+                  setEditingProductId(product._id ?? null);
                 }}
                 className="text-blue-600 hover:text-blue-800 text-sm"
               >
@@ -184,7 +183,7 @@ export default function DashboardPage() {
               </button>
 
               <button
-                onClick={() => removeProduct(product.id)}
+                onClick={() => product._id && removeProduct(product._id)}
                 className="text-red-600 hover:text-red-800 text-sm"
               >
                 Delete
