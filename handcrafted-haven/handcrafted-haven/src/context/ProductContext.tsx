@@ -21,11 +21,10 @@ export const ProductProvider = ({
 
   useEffect(() => {
     const fetchProducts = async () => {
-    try {
+      try {
         const res = await fetch("/api/products");
         const data = await res.json();
         setProducts(data);
-      
       } catch (error) {
         console.log("Failed to fetch products", error);
       }
@@ -33,7 +32,7 @@ export const ProductProvider = ({
     fetchProducts();
   }, []);
 
-  const addProduct = async (product: Omit<Product, '_id'>) => {
+  const addProduct = async (product: Omit<Product, "_id">) => {
     try {
       const res = await fetch("/api/products", {
         method: "POST",
@@ -46,17 +45,25 @@ export const ProductProvider = ({
         const products = await productsRes.json();
         setProducts(products);
       }
-
-
-
     } catch (error) {
       console.error("Something went wront with adding the product", error);
-
     }
   };
 
-  const removeProduct = (id: string) =>{
-    setProducts((prev) => prev.filter((product) => product._id !== id));
+  const removeProduct = async (id: string) => {
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+         const productsRes = await fetch("/api/products");
+         const products = await productsRes.json();
+         setProducts(products);
+      }
+    } catch (error) {
+      console.error("Something went wront with updating the product", error);
+    }
   };
 
   const updateProduct = async (updatedProduct: Product) => {
@@ -68,15 +75,13 @@ export const ProductProvider = ({
       });
 
       if (res.ok) {
-         const productsRes = await fetch("/api/products");
+        const productsRes = await fetch("/api/products");
         const products = await productsRes.json();
         setProducts(products);
       }
     } catch (error) {
-       console.error("Something went wront with updating the product", error);
-
+      console.error("Something went wront with updating the product", error);
     }
-   
   };
 
   return (
