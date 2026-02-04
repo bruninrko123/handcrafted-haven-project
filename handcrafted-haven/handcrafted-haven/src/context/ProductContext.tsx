@@ -59,12 +59,24 @@ export const ProductProvider = ({
     setProducts((prev) => prev.filter((product) => product._id !== id));
   };
 
-  const updateProduct = (updatedProduct: Product) => {
-    setProducts((prev) =>
-      prev.map((product) =>
-        product._id === updatedProduct._id ? updatedProduct : product,
-      ),
-    );
+  const updateProduct = async (updatedProduct: Product) => {
+    try {
+      const res = await fetch(`/api/products/${updatedProduct._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedProduct),
+      });
+
+      if (res.ok) {
+         const productsRes = await fetch("/api/products");
+        const products = await productsRes.json();
+        setProducts(products);
+      }
+    } catch (error) {
+       console.error("Something went wront with updating the product", error);
+
+    }
+   
   };
 
   return (
