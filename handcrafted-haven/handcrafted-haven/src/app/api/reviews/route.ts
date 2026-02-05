@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Review from "@/models/Review";
 
+
+// POST - Creates Review
 export async function POST(req: Request) {
   try {
     await connectToDatabase();
@@ -48,6 +50,35 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       { message: "Failed to create rview" },
+      { status: 500 }
+    );
+  }
+}
+
+// GET - Fetchs a Review
+export async function GET(req: Request) {
+  try {
+    await connectToDatabase();
+
+    const { searchParams } = new URL(req.url);
+    const productId = searchParams.get("productId");
+
+    if (!productId) {
+      return NextResponse.json(
+        { message: "productId is required" },
+        { status: 400 }
+      )
+    }
+
+    const reviews = await Review.find({ productId })
+    .sort({ createdAt: -1 }); // newest first
+
+    return NextResponse.json(reviews, { status: 200 });
+
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: "Failed to fetch reviews" },
       { status: 500 }
     );
   }
