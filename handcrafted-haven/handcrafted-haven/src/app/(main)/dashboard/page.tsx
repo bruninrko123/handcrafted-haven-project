@@ -155,7 +155,7 @@ export default function DashboardPage() {
             className="bg-white p-4 rounded shadow flex gap-4"
           >
             <Image
-              src={product.imageUrl || "/placeholder.png"}
+              src={product.imageUrl?.startsWith("http") ? product.imageUrl : "/placeholder.png"}
               alt={product.name}
               width={80}
               height={80}
