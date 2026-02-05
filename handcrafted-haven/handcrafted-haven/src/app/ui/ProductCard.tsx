@@ -11,24 +11,22 @@ export default function ProductCard({ product }: { product: Product }) {
 
       <div className="relative w-full aspect-[4/3] bg-gray-100 flex items-center justify-center">
         <Image
-        src={product.imageUrl}
-        alt={product.name}
-        fill
-        className="object-cover rounded-md"
-      />
+          src={
+            product.imageUrl?.startsWith("http")
+              ? product.imageUrl
+              : "/placeholder.png"
+          }
+          alt={product.name}
+          fill
+          className="object-cover rounded-md"
+        />
       </div>
 
-      <h3 className="mt-3 text-lg font-semibold">
-        {product.name}
-      </h3>
+      <h3 className="mt-3 text-lg font-semibold">{product.name}</h3>
 
-      <p className="text-sm text-gray-600">
-        {product.description}
-      </p>
+      <p className="text-sm text-gray-600">{product.description}</p>
 
-      <p className="mt-2 font-bold text-lg">
-        ${product.price}
-      </p>
+      <p className="mt-2 font-bold text-lg">${product.price}</p>
 
       <span className="inline-block mt-1 text-xs text-gray-500">
         {product.category}
