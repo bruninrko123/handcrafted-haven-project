@@ -20,7 +20,7 @@ export default function CheckoutPage() {
         <>
           <ul className="space-y-4">
             {cart.map(item => (
-              <li key={item.id} className="bg-white p-4 rounded shadow">
+              <li key={item._id} className="bg-white p-4 rounded shadow">
                 <div className="flex justify-between">
                   <span>
                     {item.name} × {item.quantity}

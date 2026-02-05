@@ -22,7 +22,7 @@ export default function CartPage() {
         <div className="space-y-4">
           {cart.map((item) => (
             <div
-              key={item.id}
+              key={item._id}
               className="flex justify-between items-center bg-white p-4 rounded shadow"
             >
               {/* PRODUCT IMAGE */}
@@ -48,7 +48,7 @@ export default function CartPage() {
               {/* QUANTITY CONTROLS */}
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => decreaseQuantity(item.id)}
+                  onClick={() => decreaseQuantity(item._id!)}
                   className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                 >
                   −
@@ -57,14 +57,14 @@ export default function CartPage() {
                 <span className="font-medium">{item.quantity}</span>
 
                 <button
-                  onClick={() => increaseQuantity(item.id)}
+                  onClick={() => increaseQuantity(item._id!)}
                   className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                 >
                   +
                 </button>
 
                 <button
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => removeFromCart(item._id!)}
                   className="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                 >
                   Remove
