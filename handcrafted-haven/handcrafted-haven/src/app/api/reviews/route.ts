@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Review from "@/models/Review";
 
+import mongoose from "mongoose";
+
+
 
 // POST - Creates Review
 export async function POST(req: Request) {
@@ -9,13 +12,28 @@ export async function POST(req: Request) {
     await connectToDatabase();
 
     const body = await req.json();
-    const { productId, userId, rating, comment } = body;
+    const { productId, userId, rating, comment } = await req.json();;
 
     // Basic validation
     if (!productId || !userId || !rating || !comment) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
+      );
+    }
+
+    // ObjectId validation
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return NextResponse.json(
+        { message: "Invalid productId" },
+        { status: 400 }
+      );
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return NextResponse.json(
+        { message: "Invalid userId" },
+        { status: 400 },
       );
     }
 
@@ -49,7 +67,7 @@ export async function POST(req: Request) {
     console.error("Review POST error:", error);
 
     return NextResponse.json(
-      { message: "Failed to create rview" },
+      { message: "Failed to create review" },
       { status: 500 }
     );
   }

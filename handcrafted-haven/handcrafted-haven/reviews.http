@@ -1,0 +1,16 @@
+### Get reviews for a product
+GET http://localhost:3000/api/reviews?productId=65ab123f1e8a2c9b4e9d1111
+Accept: application/json
+
+###
+
+### Create a new review
+POST http://localhost:3000/api/reviews
+Content-Type: application/json
+
+{
+  "productId": "65ab123f1e8a2c9b4e9d1111",
+  "userId": "65ab456a7c8d9e1234567890",
+  "rating": 5,
+  "comment": "Beautiful craftsmanship. Highly recommend!"
+}
