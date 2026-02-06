@@ -10,7 +10,7 @@ import Image from "next/image";
 export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
-
+  const [uploading, setUploading] = useState(false);
   const { isArtisan } = useAuth();
 
   if (!isArtisan) {
@@ -130,17 +130,34 @@ export default function DashboardPage() {
         </select>
 
         <input
-          type="text"
-          name="imageUrl"
-          placeholder="Image URL"
-          value={formData.imageUrl}
-          onChange={handleChange}
+          type="file"
+          accept="image/*"
+          onChange={async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            
+            setUploading(true);
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            const res = await fetch("/api/upload", {
+              method: "POST",
+              body: formData,
+            });
+
+            const data = await res.json();
+            if (data.url) {
+              setFormData((prev) => ({ ...prev, imageUrl: data.url }));
+            }
+            setUploading(false);
+          }}
           className="w-full border p-2 rounded"
-          required
         />
 
         <button
           type="submit"
+          disabled={uploading}
           className="bg-[#6B4F3F] text-white px-6 py-2 rounded hover:opacity-90"
         >
           {editingProductId ? "Update Product" : "Add Product"}
