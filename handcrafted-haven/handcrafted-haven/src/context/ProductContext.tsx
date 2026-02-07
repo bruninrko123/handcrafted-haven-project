@@ -24,7 +24,16 @@ export const ProductProvider = ({
       try {
         const res = await fetch("/api/products");
         const data = await res.json();
-        setProducts(data);
+        const normalized = Array.isArray(data)
+          ? data.map((product) => ({
+              ...product,
+              _id:
+                typeof product?._id === "string"
+                  ? product._id
+                  : product?._id?.$oid ?? String(product?._id ?? ""),
+            }))
+          : [];
+        setProducts(normalized);
       } catch (error) {
         console.log("Failed to fetch products", error);
       }

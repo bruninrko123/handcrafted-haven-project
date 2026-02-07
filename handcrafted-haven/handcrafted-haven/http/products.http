@@ -1,0 +1,11 @@
+### Create Product (No Reviews)
+POST http://localhost:3000/api/products
+Content-Type: application/json
+
+{
+  "name": "Ceramic Mug",
+  "description": "Handcrafted ceramic mug with a rustic finish.",
+  "price": 28,
+  "imageUrl": "images/gallery/ceramic-mug.jpg",
+  "category": "Kitchen"
+}

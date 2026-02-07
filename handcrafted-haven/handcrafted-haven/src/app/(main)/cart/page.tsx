@@ -12,6 +12,16 @@ export default function CartPage() {
     0
   );
 
+  const normalizeImageUrl = (url?: string) => {
+    if (!url) return "/placeholder.png";
+    const trimmed = url.trim().replace(/\/+$/, "");
+    if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+      return trimmed;
+    }
+    if (trimmed.startsWith("/")) return trimmed;
+    return `/${trimmed}`;
+  };
+
   return (
     <main className="min-h-screen bg-yellow-50 p-6">
       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
@@ -27,7 +37,7 @@ export default function CartPage() {
             >
               {/* PRODUCT IMAGE */}
               <Image
-                src={item.imageUrl}
+                src={normalizeImageUrl(item.imageUrl)}
                 alt={item.name}
                 width={80}
                 height={80}
