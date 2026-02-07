@@ -18,18 +18,21 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    if (typeof window !== "undefined") {
-      const storedCart = localStorage.getItem("cart");
-      return storedCart ? JSON.parse(storedCart) : [];
-    }
-    return [];
-  });
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [hasHydrated, setHasHydrated] = useState(false);
+
+  // Load cart from localStorage after hydration
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    setCart(storedCart ? JSON.parse(storedCart) : []);
+    setHasHydrated(true);
+  }, []);
 
   // Sync cart with localStorage
   useEffect(() => {
+    if (!hasHydrated) return;
     localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+  }, [cart, hasHydrated]);
 
   // ➕ Increase quantity
   const increaseQuantity = (id: string) => {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import StarRatingInput from "@/app/ui/StarRatingInput";
 
 export default function ReviewForm({
   productId,
@@ -13,13 +14,14 @@ export default function ReviewForm({
 }) {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [disabled, setDisabled] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setError(null);
 
-    await fetch("/api/reviews", {
+    const res = await fetch("/api/reviews", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -30,43 +32,43 @@ export default function ReviewForm({
       }),
     });
 
-    setComment("");
+    if (res.status === 409) {
+      setError("You have already reviewed this product.");
+      setDisabled(true);
+      return;
+    }
+
+    if (!res.ok) {
+      setError("Failed to submit review.");
+      return;
+    }
+
     setRating(5);
-    setLoading(false);
-    onReviewAdded(); // refresh reviews
+    setComment("");
+    onReviewAdded();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6 space-y-3">
-      <h3 className="text-lg font-semibold">Leave a Review</h3>
+    <form onSubmit={handleSubmit} className="mb-6 space-y-3">
+      <fieldset disabled={disabled} className="space-y-3">
+        <StarRatingInput rating={rating} onChange={setRating} />
 
-      <select
-        value={rating}
-        onChange={(e) => setRating(Number(e.target.value))}
-        className="border p-2 rounded"
-      >
-        {[5, 4, 3, 2, 1].map((r) => (
-          <option key={r} value={r}>
-            {r} Stars
-          </option>
-        ))}
-      </select>
+        <textarea
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Write your review..."
+          className="w-full border p-2 rounded"
+        />
 
-      <textarea
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        className="w-full border p-2 rounded"
-        placeholder="Write a short review..."
-        required
-      />
+        <button
+          type="submit"
+          className="bg-black text-white px-4 py-2 rounded"
+        >
+          Submit Review
+        </button>
+      </fieldset>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="bg-[#6B4F3F] text-white px-4 py-2 rounded"
-      >
-        {loading ? "Submitting..." : "Submit Review"}
-      </button>
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </form>
   );
 }

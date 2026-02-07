@@ -1,18 +1,17 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Review from "@/models/Review";
-
 import mongoose from "mongoose";
 
-
-
-// POST - Creates Review
+/* =========================
+   POST — Create Review
+   (Prevent Duplicates)
+   ========================= */
 export async function POST(req: Request) {
   try {
     await connectToDatabase();
 
-    const body = await req.json();
-    const { productId, userId, rating, comment } = await req.json();;
+    const { productId, userId, rating, comment } = await req.json();
 
     // Basic validation
     if (!productId || !userId || !rating || !comment) {
@@ -33,7 +32,7 @@ export async function POST(req: Request) {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json(
         { message: "Invalid userId" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -50,6 +49,19 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { message: "Comment is too long" },
         { status: 400 }
+      );
+    }
+
+    // 🔒 Prevent duplicate review per user per product
+    const existingReview = await Review.findOne({
+      productId,
+      userId,
+    });
+
+    if (existingReview) {
+      return NextResponse.json(
+        { message: "You have already reviewed this product" },
+        { status: 409 }
       );
     }
 
@@ -73,7 +85,9 @@ export async function POST(req: Request) {
   }
 }
 
-// GET - Fetchs a Review
+/* =========================
+   GET — Fetch Reviews
+   ========================= */
 export async function GET(req: Request) {
   try {
     await connectToDatabase();
@@ -85,11 +99,11 @@ export async function GET(req: Request) {
       return NextResponse.json(
         { message: "productId is required" },
         { status: 400 }
-      )
+      );
     }
 
     const reviews = await Review.find({ productId })
-    .sort({ createdAt: -1 }); // newest first
+      .sort({ createdAt: -1 }); // newest first
 
     return NextResponse.json(reviews, { status: 200 });
 
