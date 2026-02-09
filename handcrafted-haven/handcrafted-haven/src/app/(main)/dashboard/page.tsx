@@ -7,6 +7,8 @@ import { useAuth } from "@/context/AuthContext";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 
+
+
 export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
@@ -27,6 +29,7 @@ export default function DashboardPage() {
     "Other",
   ];
 
+
   const [formData, setFormData] = useState<Product>(()=> ({
     name: "",
     description: "",
@@ -34,6 +37,8 @@ export default function DashboardPage() {
     category: "",
     imageUrl: "",
   }));
+
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -129,31 +134,42 @@ export default function DashboardPage() {
           ))}
         </select>
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={async (e) => {
-            const file = e.target.files?.[0];
-            if (!file) return;
-            
-            setUploading(true);
+        <div className="flex gap-5">
+          {formData.imageUrl && (
+            <Image
+              src={formData.imageUrl}
+              alt="Profile preview"
+              width={384}
+              height={384}
+              className="w-48 h-48 object-cover mx-auto my-2"
+            />
+          )}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
 
-            const formData = new FormData();
-            formData.append("file", file);
+              setUploading(true);
 
-            const res = await fetch("/api/upload", {
-              method: "POST",
-              body: formData,
-            });
+              const formData = new FormData();
+              formData.append("file", file);
 
-            const data = await res.json();
-            if (data.url) {
-              setFormData((prev) => ({ ...prev, imageUrl: data.url }));
-            }
-            setUploading(false);
-          }}
-          className="w-full border p-2 rounded"
-        />
+              const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+              });
+
+              const data = await res.json();
+              if (data.url) {
+                setFormData((prev) => ({ ...prev, imageUrl: data.url }));
+              }
+              setUploading(false);
+            }}
+            className="w-full border p-2 rounded"
+          />
+        </div>
 
         <button
           type="submit"
@@ -172,7 +188,11 @@ export default function DashboardPage() {
             className="bg-white p-4 rounded shadow flex gap-4"
           >
             <Image
-              src={product.imageUrl?.startsWith("http") ? product.imageUrl : "/placeholder.png"}
+              src={
+                product.imageUrl?.startsWith("http")
+                  ? product.imageUrl
+                  : "/placeholder.png"
+              }
               alt={product.name}
               width={80}
               height={80}
@@ -181,9 +201,7 @@ export default function DashboardPage() {
 
             <div className="flex-1">
               <h3 className="font-semibold">{product.name}</h3>
-              <p className="text-sm text-gray-600">
-                {product.description}
-              </p>
+              <p className="text-sm text-gray-600">{product.description}</p>
               <p className="font-medium">${product.price}</p>
               <p className="text-xs text-gray-500">{product.category}</p>
             </div>

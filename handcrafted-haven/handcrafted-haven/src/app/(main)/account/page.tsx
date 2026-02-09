@@ -3,6 +3,9 @@ import { FormInput } from "@/app/ui/FormInput";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
+
+
 
 export default function Account() {
   const [name, setName] = useState("");
@@ -50,7 +53,7 @@ export default function Account() {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <form
-          onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
         className="bg-gray-400 justify-self-center mt-5 w-[400px] rounded p-2"
       >
         <FormInput
@@ -72,19 +75,22 @@ export default function Account() {
           placeholder="example@email.com"
           required
         />
-
-        <FormInput
-          id="currentPassword"
-          label="Password:"
-          type="password"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          placeholder="Type your password"
-          required
-        />
-
+        <div>
+          <FormInput
+            id="currentPassword"
+            label="Password:"
+            type="password"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            placeholder="Type your password"
+            required
+          />
+          <Link href="/account/change-password" className="block text-blue-800 -mt-4 text-sm">
+            Change Password
+          </Link>
+        </div>
         {profileImage && (
-          <Image 
+          <Image
             src={profileImage}
             alt="Profile preview"
             width={96}
