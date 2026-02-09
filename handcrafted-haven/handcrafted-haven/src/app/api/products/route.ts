@@ -4,13 +4,44 @@ import Product from "@/models/Product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
+import Review from "@/models/Review";
+import mongoose from "mongoose";
 
 
 export async function GET() {
   try {
     await connectToDatabase();
     const products = await Product.find({});
-    return NextResponse.json(products);
+
+    const productIds = products
+      .map((p) => p._id)
+      .filter((id) => mongoose.Types.ObjectId.isValid(id));
+
+    const reviewStats = await Review.aggregate([
+      { $match: { productId: { $in: productIds } } },
+      {
+        $group: {
+          _id: "$productId",
+          averageRating: { $avg: "$rating" },
+          reviewCount: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const statsById = new Map(
+      reviewStats.map((stat) => [String(stat._id), stat])
+    );
+
+    const enriched = products.map((product) => {
+      const stats = statsById.get(String(product._id));
+      return {
+        ...product.toObject(),
+        averageRating: stats?.averageRating ?? 0,
+        reviewCount: stats?.reviewCount ?? 0,
+      };
+    });
+
+    return NextResponse.json(enriched);
   } catch (error) {
     return NextResponse.json(
       { error: "failed to fetch products" },
@@ -64,7 +95,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Error adding product", error);
       return NextResponse.json(
-      { error: "Something went wrong adding the product"},
+      { error: "Something went wrong adding the product" },
       { status: 500 },
     );
   }

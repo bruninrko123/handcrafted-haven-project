@@ -1,10 +1,82 @@
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
+import Review from "@/models/Review";
+
+/* =========================
+   GET — Single Product
+   + Average Rating
+   ========================= */
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } | Promise<{ id: string }> }
+) {
+  try {
+    await connectToDatabase();
+
+    const resolvedParams =
+      typeof (params as { then?: unknown })?.then === "function"
+        ? await (params as Promise<{ id: string }>)
+        : (params as { id: string });
+
+    const rawId = resolvedParams?.id;
+    const id =
+      typeof rawId === "string"
+        ? rawId.trim()
+        : Array.isArray(rawId)
+          ? rawId[0]?.trim()
+          : "";
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Missing product id" },
+        { status: 400 }
+      );
+    }
+
+    let productDoc = await Product.findById(id);
+    let productObj = productDoc ? productDoc.toObject() : null;
+
+    if (!productObj) {
+      const raw = await Product.collection.findOne({ _id: id as unknown as mongoose.Types.ObjectId });
+      productObj = raw as typeof productObj;
+    }
+
+    if (!productObj) {
+      return NextResponse.json(
+        { error: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    const reviews = await Review.find({ productId: id });
+
+    const averageRating =
+      reviews.length > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+        : 0;
+
+    return NextResponse.json({
+      ...productObj,
+      averageRating,
+      reviewCount: reviews.length,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to fetch product" },
+      { status: 500 }
+    );
+  }
+}
+
+/* =========================
+   PUT — Update Product
+   ========================= */
 
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: { id: string } },
 ) {
   try {
     const data = await request.json();
@@ -36,9 +108,13 @@ export async function PUT(
   }
 }
 
+/* =========================
+   DELETE — Remove Product
+   ========================= */
+
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: { id: string } },
 ) {
   try {
     await connectToDatabase();

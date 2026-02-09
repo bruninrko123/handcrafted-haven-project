@@ -1,9 +1,16 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Product } from "@/types/product";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart();
+  const { isAuthenticated } = useAuth();
+  const productId =
+    typeof product._id === "string"
+      ? product._id
+      : (product as { _id?: { $oid?: string } })._id?.$oid;
 
   return (
     <div className="border rounded-lg p-4 shadow-sm bg-white flex flex-col">
@@ -22,7 +29,31 @@ export default function ProductCard({ product }: { product: Product }) {
         />
       </div>
 
-      <h3 className="mt-3 text-lg font-semibold">{product.name}</h3>
+      {productId ? (
+        <Link
+          href={`/products/${productId}`}
+          className="mt-3 text-lg font-semibold"
+        >
+          {product.name}
+        </Link>
+      ) : (
+        <span className="mt-3 text-lg font-semibold">{product.name}</span>
+      )}
+
+      <div className="mt-1 text-sm text-gray-600">
+        {typeof product.reviewCount === "number" &&
+        product.reviewCount > 0 &&
+        typeof product.averageRating === "number" ? (
+          <span>
+            {"★".repeat(Math.round(product.averageRating))}
+            <span className="ml-2">
+              {product.averageRating.toFixed(1)} ({product.reviewCount})
+            </span>
+          </span>
+        ) : (
+          <span>No reviews yet</span>
+        )}
+      </div>
 
       <p className="text-sm text-gray-600">{product.description}</p>
 
@@ -39,6 +70,15 @@ export default function ProductCard({ product }: { product: Product }) {
       >
         Add to Cart
       </button>
+
+      {isAuthenticated && productId && (
+        <Link
+          href={`/products/${productId}#reviews`}
+          className="mt-2 inline-block text-sm text-[#6B4F3F] underline"
+        >
+          Leave a Review
+        </Link>
+      )}
     </div>
   );
 }
