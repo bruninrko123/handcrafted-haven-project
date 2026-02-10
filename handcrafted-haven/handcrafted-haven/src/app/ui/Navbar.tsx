@@ -53,6 +53,9 @@ const Navbar = () => {
               Dashboard
             </Link>
           )}
+          <Link href="/artisans" className="hover:text-blue-300 text-2xl">
+            Artisans
+          </Link>
         </div>
 
         <div className="flex items-center gap-5">

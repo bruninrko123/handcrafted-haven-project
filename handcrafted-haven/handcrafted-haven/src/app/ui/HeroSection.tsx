@@ -1,6 +1,4 @@
 import React from 'react';
-import Link from 'next/link';
-import { ArrowRight} from 'lucide-react';
 
 const HeroSection = () => {
   return (
@@ -18,15 +16,6 @@ const HeroSection = () => {
               handmade creation. Join our thriving community of makers and
               collectors.
             </p>
-
-            <div>
-              <Link href="/marketplace">
-                <span>Explore Marketplace</span>
-                <ArrowRight />
-              </Link>
-
-              <Link href="/join-artisan">Become an Artisan</Link>
-            </div>
 
             <div className="w-[600px] grid place-items-left grid-cols-2  grid-rows-2 gap-x-1 justify-self-center mb-10 mt-10">
               <div className="border p-2 col-start-1 col-end-2 row-start-1 row-end-2">

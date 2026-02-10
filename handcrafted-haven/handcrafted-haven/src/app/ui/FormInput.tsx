@@ -15,7 +15,12 @@ export function FormInput({ id, label, type, value, onChange, placeholder, requi
     
     return (
         <>
-            <label htmlFor={id}>{label}</label>
+            <label
+                htmlFor={id}
+                className="block text-sm font-medium text-[#4b3621] mb-1"
+            >
+                {label}
+            </label>
             <input
                 id={id}
                 type={type}
@@ -23,7 +28,7 @@ export function FormInput({ id, label, type, value, onChange, placeholder, requi
                 onChange={onChange}
                 placeholder={placeholder}
                 required={required}
-                className="block h-[45px] rounded mb-5 w-full p-2"
+                className="block w-full rounded-lg border border-[#d9c3aa] bg-white/90 px-3 py-2 text-sm text-[#3b2a1a] shadow-sm placeholder:text-[#9a8773] focus:outline-none focus:ring-2 focus:ring-[#6b4f3f] focus:border-transparent mb-4"
             />
         </>
     );
