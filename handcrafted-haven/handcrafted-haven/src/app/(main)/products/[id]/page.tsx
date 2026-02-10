@@ -6,6 +6,7 @@ import ReviewForm from "@/app/ui/ReviewForm";
 import ReviewList from "@/app/ui/ReviewList";
 import StarDisplay from "@/app/ui/StarDisplay";
 import { Product } from "@/types/product";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
@@ -14,8 +15,8 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // TEMP – later comes from auth
-  const userId = "65f123abc456def789012345";
+  const { isAuthenticated, user } = useAuth();
+  const userId = user?.id;
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
@@ -66,11 +67,17 @@ export default function ProductDetailPage() {
       <p className="font-bold mb-6">${product.price}</p>
 
       {/* Reviews */}
-      <ReviewForm
-        productId={productId}
-        userId={userId}
-        onReviewAdded={() => setRefreshKey((prev) => prev + 1)}
-      />
+      {isAuthenticated && userId ? (
+        <ReviewForm
+          productId={productId}
+          userId={userId}
+          onReviewAdded={() => setRefreshKey((prev) => prev + 1)}
+        />
+      ) : (
+        <p className="text-sm text-gray-600">
+          Please log in to leave a review.
+        </p>
+      )}
 
       <ReviewList key={refreshKey} productId={productId} />
     </div>
