@@ -7,8 +7,6 @@ import { useAuth } from "@/context/AuthContext";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 
-
-
 export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
@@ -29,8 +27,7 @@ export default function DashboardPage() {
     "Other",
   ];
 
-
-  const [formData, setFormData] = useState<Product>(()=> ({
+  const [formData, setFormData] = useState<Product>(() => ({
     name: "",
     description: "",
     price: 0,
@@ -38,10 +35,10 @@ export default function DashboardPage() {
     imageUrl: "",
   }));
 
-
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
 
@@ -62,7 +59,6 @@ export default function DashboardPage() {
     }
 
     setFormData({
-      
       name: "",
       description: "",
       price: 0,
@@ -134,50 +130,83 @@ export default function DashboardPage() {
           ))}
         </select>
 
-        <div className="flex gap-5">
+        <div className="flex flex-col gap-3">
           {formData.imageUrl && (
-            <Image
-              src={formData.imageUrl}
-              alt="Profile preview"
-              width={384}
-              height={384}
-              className="w-48 h-48 object-cover mx-auto my-2"
-            />
+            <div className="relative mt-3">
+              <Image
+                src={formData.imageUrl}
+                alt="Profile preview"
+                width={384}
+                height={384}
+                className="w-48 h-48 object-cover mx-auto my-2"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData((prev) => ({ ...prev, imageUrl: "" }))
+                }
+                className="absolute top-2 right-2 bg-black/50 text-white rounded-full"
+              >
+                X
+              </button>
+            </div>
           )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
+          <div className="flex items-center justify-between">
+            <label className="self-start flex gap-2 items-center cursor-pointer bg-[#6B4F3F]/10 text-[#6B4F3F] hover:opacity-80 text-sm font-medium px-4 py-2 rounded-full">
+              {/* Note: The SVG was generated with AI */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 7h2l2-3h10l2 3h2a1 1 0 011 1v11a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1z"
+                />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+              Product's photo
+              <input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
 
-              setUploading(true);
+                  setUploading(true);
 
-              const formData = new FormData();
-              formData.append("file", file);
+                  const formData = new FormData();
+                  formData.append("file", file);
 
-              const res = await fetch("/api/upload", {
-                method: "POST",
-                body: formData,
-              });
+                  const res = await fetch("/api/upload", {
+                    method: "POST",
+                    body: formData,
+                  });
 
-              const data = await res.json();
-              if (data.url) {
-                setFormData((prev) => ({ ...prev, imageUrl: data.url }));
-              }
-              setUploading(false);
-            }}
-            className="w-full border p-2 rounded"
-          />
+                  const data = await res.json();
+                  if (data.url) {
+                    setFormData((prev) => ({ ...prev, imageUrl: data.url }));
+                  }
+                  setUploading(false);
+                }}
+                className="hidden"
+              />
+            </label>
+          <button
+            type="submit"
+            disabled={uploading}
+            className="bg-[#6B4F3F] text-white px-6 py-2 rounded hover:opacity-90"
+          >
+            {editingProductId ? "Update Product" : "Add Product"}
+          </button>
+          </div>
+
         </div>
-
-        <button
-          type="submit"
-          disabled={uploading}
-          className="bg-[#6B4F3F] text-white px-6 py-2 rounded hover:opacity-90"
-        >
-          {editingProductId ? "Update Product" : "Add Product"}
-        </button>
       </form>
 
       {/* PRODUCT LIST */}
