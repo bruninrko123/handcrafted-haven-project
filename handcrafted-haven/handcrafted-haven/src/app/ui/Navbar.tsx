@@ -1,17 +1,34 @@
 "use client";
-import React from 'react';
+
 import Link from 'next/link';
 import { ShoppingBag, User, Search, Menu, LogOut } from 'lucide-react';
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 
 const Navbar = () => {
 
   const { isAuthenticated, isArtisan, user, signOut, isLoading } = useAuth();
   const { cart } = useCart();
+  const { data: session } = useSession();
+  const [profileImage, setProfileImage] = useState("");
 
+  useEffect(() => {
+      const fetchUser = async () => {
+        if (!session?.user?.id) return;
+  
+        const res = await fetch(`/api/artisans/${session.user.id}`);
+        const data = await res.json();
+  
+       
+        setProfileImage(data.artisan.profileImage || "");
+      }
+  
+      fetchUser();
+    }, [session])
  
 
   return (
@@ -20,27 +37,29 @@ const Navbar = () => {
         {/* Auth */}
         <div>
           {isAuthenticated ? (
-            <button onClick={signOut}>
-              <LogOut size={18} />
-              Logout
-            </button>
+            <div className="flex gap-5">
+              <button onClick={signOut}>
+                <LogOut size={18} />
+                Logout
+              </button>
+            </div>
           ) : (
-            <button className='flex gap-3'>
-                <Link href="/login">Login</Link>
-                <Link href="/signup">Sign up</Link>
+            <button className="flex gap-3">
+              <Link href="/login">Login</Link>
+              <Link href="/signup">Sign up</Link>
             </button>
           )}
         </div>
 
         <div className="flex gap-8 text-lg font-medium ">
+          <Link href="/" className="hover:text-blue-300 text-2xl">
+            Home
+          </Link>
           <Link href="/products" className="hover:text-blue-300 text-2xl">
             Products
           </Link>
           <Link href="/artisans" className="hover:text-blue-300 text-2xl">
             Artisans
-          </Link>
-          <Link href="/categories" className="hover:text-blue-300 text-2xl">
-            Categories
           </Link>
           <Link href="/about" className="hover:text-blue-300 text-2xl">
             Our Story
@@ -54,10 +73,6 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-5">
-          <button>
-            <Search size={22} />
-          </button>
-
           <button className="relative">
             <Link href="/cart" className="relative">
               <ShoppingBag size={22} />
@@ -67,12 +82,23 @@ const Navbar = () => {
             </Link>
           </button>
 
-          <button>
-            <User size={22} />
-          </button>
-          <button>
+          <Link href="/account">
+            <div className="flex gap-2 items-center">
+              {profileImage && (
+                <Image
+                src={profileImage}
+                alt="Profile preview"
+                width={96}
+                height={96}
+                className="w-12 h-12 rounded-full object-cover mx-auto my-2"
+                />
+              )}
+              My Account
+            </div>
+          </Link>
+          {/* <button>
             <Menu size={24} />
-          </button>
+          </button> */}
         </div>
       </div>
     </nav>

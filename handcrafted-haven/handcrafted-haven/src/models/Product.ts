@@ -1,6 +1,11 @@
 import mongoose, { Schema, models } from "mongoose";
 
 const ProductSchema = new Schema({
+  artisanId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
   category: {
     type: String,
     required: true,
