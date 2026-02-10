@@ -17,8 +17,15 @@ const Navbar = () => {
   return (
     <nav className="bg-gradient-to-r from-[#6f4e37] to-[#7a5a45] shadow-md">
       <div className="max-w-7xl mx-auto px-6 pt-4 flex items-center justify-between text-[#f5e6d3]">
-        {/* Auth */}
-        <div>
+        {/* Logo + Auth */}
+        <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center gap-2 text-2xl font-semibold">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#f5e6d3] text-sm">
+              HH
+            </span>
+            Handcrafted Haven
+          </Link>
+
           {isAuthenticated ? (
             <button onClick={signOut}>
               <LogOut size={18} />
@@ -36,21 +43,14 @@ const Navbar = () => {
           <Link href="/products" className="hover:text-blue-300 text-2xl">
             Products
           </Link>
-          <Link href="/artisans" className="hover:text-blue-300 text-2xl">
-            Artisans
-          </Link>
-          <Link href="/categories" className="hover:text-blue-300 text-2xl">
-            Categories
-          </Link>
-          <Link href="/about" className="hover:text-blue-300 text-2xl">
-            Our Story
-          </Link>
-
           {isArtisan && (
             <Link href="/dashboard" className="hover:text-blue-300 text-2xl">
               Dashboard
             </Link>
           )}
+          <Link href="/artisans" className="hover:text-blue-300 text-2xl">
+            Artisans
+          </Link>
         </div>
 
         <div className="flex items-center gap-5">
