@@ -10,7 +10,7 @@ import Image from "next/image";
 export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
-
+  const [uploading, setUploading] = useState(false);
   const { isArtisan } = useAuth();
 
   if (!isArtisan) {
@@ -27,7 +27,7 @@ export default function DashboardPage() {
     "Other",
   ];
 
-  const [formData, setFormData] = useState<Product>(()=> ({
+  const [formData, setFormData] = useState<Product>(() => ({
     name: "",
     description: "",
     price: 0,
@@ -36,7 +36,9 @@ export default function DashboardPage() {
   }));
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
 
@@ -57,7 +59,6 @@ export default function DashboardPage() {
     }
 
     setFormData({
-      
       name: "",
       description: "",
       price: 0,
@@ -129,22 +130,83 @@ export default function DashboardPage() {
           ))}
         </select>
 
-        <input
-          type="text"
-          name="imageUrl"
-          placeholder="Image URL"
-          value={formData.imageUrl}
-          onChange={handleChange}
-          className="w-full border p-2 rounded"
-          required
-        />
+        <div className="flex flex-col gap-3">
+          {formData.imageUrl && (
+            <div className="relative mt-3">
+              <Image
+                src={formData.imageUrl}
+                alt="Profile preview"
+                width={384}
+                height={384}
+                className="w-48 h-48 object-cover mx-auto my-2"
+              />
 
-        <button
-          type="submit"
-          className="bg-[#6B4F3F] text-white px-6 py-2 rounded hover:opacity-90"
-        >
-          {editingProductId ? "Update Product" : "Add Product"}
-        </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setFormData((prev) => ({ ...prev, imageUrl: "" }))
+                }
+                className="absolute top-2 right-2 bg-black/50 text-white rounded-full"
+              >
+                X
+              </button>
+            </div>
+          )}
+          <div className="flex items-center justify-between">
+            <label className="self-start flex gap-2 items-center cursor-pointer bg-[#6B4F3F]/10 text-[#6B4F3F] hover:opacity-80 text-sm font-medium px-4 py-2 rounded-full">
+              {/* Note: The SVG was generated with AI */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M3 7h2l2-3h10l2 3h2a1 1 0 011 1v11a1 1 0 01-1 1H3a1 1 0 01-1-1V8a1 1 0 011-1z"
+                />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+              Product's photo
+              <input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  setUploading(true);
+
+                  const formData = new FormData();
+                  formData.append("file", file);
+
+                  const res = await fetch("/api/upload", {
+                    method: "POST",
+                    body: formData,
+                  });
+
+                  const data = await res.json();
+                  if (data.url) {
+                    setFormData((prev) => ({ ...prev, imageUrl: data.url }));
+                  }
+                  setUploading(false);
+                }}
+                className="hidden"
+              />
+            </label>
+          <button
+            type="submit"
+            disabled={uploading}
+            className="bg-[#6B4F3F] text-white px-6 py-2 rounded hover:opacity-90"
+          >
+            {editingProductId ? "Update Product" : "Add Product"}
+          </button>
+          </div>
+
+        </div>
       </form>
 
       {/* PRODUCT LIST */}
@@ -155,7 +217,11 @@ export default function DashboardPage() {
             className="bg-white p-4 rounded shadow flex gap-4"
           >
             <Image
-              src={product.imageUrl?.startsWith("http") ? product.imageUrl : "/placeholder.png"}
+              src={
+                product.imageUrl?.startsWith("http")
+                  ? product.imageUrl
+                  : "/placeholder.png"
+              }
               alt={product.name}
               width={80}
               height={80}
@@ -164,9 +230,7 @@ export default function DashboardPage() {
 
             <div className="flex-1">
               <h3 className="font-semibold">{product.name}</h3>
-              <p className="text-sm text-gray-600">
-                {product.description}
-              </p>
+              <p className="text-sm text-gray-600">{product.description}</p>
               <p className="font-medium">${product.price}</p>
               <p className="text-xs text-gray-500">{product.category}</p>
             </div>

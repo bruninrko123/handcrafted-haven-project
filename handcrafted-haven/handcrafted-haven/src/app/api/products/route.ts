@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 import Review from "@/models/Review";
 import mongoose from "mongoose";
 
@@ -58,12 +61,22 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
+    // Get the logged-in user's session
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: "You must be logged in to add a product" },
+        { status: 401 }
+      );
+    }
 
     await connectToDatabase();
 
     //create  product in the db
 
     const product = await Product.create({
+      artisanId: session.user.id,
       category,
       description,
       imageUrl,

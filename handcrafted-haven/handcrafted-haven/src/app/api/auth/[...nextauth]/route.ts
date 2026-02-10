@@ -3,10 +3,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/models/User";
+import { NextAuthOptions } from "next-auth";
 
 
-
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: "credentials",
@@ -68,6 +68,7 @@ const handler = NextAuth({
     pages: {
         signIn: "/login", //This is a custom login page we'll create
     }
-});
+};
 
+const handler = NextAuth(authOptions);
 export { handler as GET, handler as POST };
