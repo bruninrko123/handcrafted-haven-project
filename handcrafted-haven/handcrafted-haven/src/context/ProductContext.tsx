@@ -5,6 +5,7 @@ import { Product } from "@/types/product";
 
 type ProductContextType = {
   products: Product[];
+  isLoading: boolean;
   addProduct: (product: Product) => void;
   removeProduct: (id: string) => void;
   updateProduct: (product: Product) => void;
@@ -18,6 +19,7 @@ export const ProductProvider = ({
   children: React.ReactNode;
 }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -36,6 +38,8 @@ export const ProductProvider = ({
         setProducts(normalized);
       } catch (error) {
         console.log("Failed to fetch products", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchProducts();
@@ -97,6 +101,7 @@ export const ProductProvider = ({
     <ProductContext.Provider
       value={{
         products,
+        isLoading,
         addProduct,
         removeProduct,
         updateProduct,

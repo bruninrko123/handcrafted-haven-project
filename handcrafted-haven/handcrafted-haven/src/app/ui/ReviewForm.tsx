@@ -21,6 +21,11 @@ export default function ReviewForm({
     e.preventDefault();
     setError(null);
 
+    if (!userId) {
+      setError("You must be logged in to leave a review.");
+      return;
+    }
+
     const res = await fetch("/api/reviews", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
