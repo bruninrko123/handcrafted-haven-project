@@ -28,11 +28,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  // Sync cart with localStorage
-  useEffect(() => {
-    if (!hasHydrated) return;
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart, hasHydrated]);
+  // // Sync cart with localStorage
+  // useEffect(() => {
+  //   if (!hasHydrated) return;
+  //   localStorage.setItem("cart", JSON.stringify(cart));
+  // }, [cart, hasHydrated]);
 
 
 

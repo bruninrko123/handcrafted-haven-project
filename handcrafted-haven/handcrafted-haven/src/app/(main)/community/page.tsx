@@ -5,7 +5,6 @@ import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
 
-
 type Post = {
   _id: string;
   artisanId: {
@@ -23,11 +22,11 @@ export default function CommunityPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const { isArtisan } = useAuth();
-
+  const [uploading, setUploading] = useState(false);
   //states for creating posts
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [linkUrl, setLinkUrl] = useState("");
+  
 
   const fetchPosts = async () => {
     const res = await fetch("/api/posts");
@@ -48,13 +47,13 @@ export default function CommunityPage() {
     const res = await fetch("/api/posts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content, imageUrl, linkUrl }),
+      body: JSON.stringify({ content, imageUrl }),
     });
 
     if (res.ok) {
       setContent("");
       setImageUrl("");
-      setLinkUrl("");
+      
       fetchPosts(); //refreshing the posts so that the new one shows
     }
   };
@@ -81,85 +80,107 @@ export default function CommunityPage() {
             required
           />
 
-          <input
-            type="text"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            placeholder="http:image.example"
-            className="w-full border p-2 rounded mb-2"
-            required
-          />
+          <div className="flex gap-5">
+            {imageUrl && (
+              <Image
+                src={imageUrl}
+                alt="Profile preview"
+                width={384}
+                height={384}
+                className="w-48 h-48 object-cover mx-auto my-2"
+              />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
 
-          <input
-            type="text"
-            value={linkUrl}
-            onChange={(e) => setLinkUrl(e.target.value)}
-            placeholder="http:link.example"
-            className="w-full border p-2 rounded mb-2"
-            required
-          />
+                setUploading(true);
+                const formData = new FormData();
+                formData.append("file", file);
+
+                const res = await fetch("/api/upload", {
+                  method: "POST",
+                  body: formData,
+                });
+
+                const data = await res.json();
+                if (data.url) {
+                  setImageUrl(data.url);
+                }
+
+                setUploading(false);
+              }}
+              className="w-full border p-2 rounded"
+            />
+          </div>
+
+          
 
           <button
+            disabled={uploading}
             type="submit"
             className="bg-[#6B4F3F] text-white px-4 py-2 rounded hover:opacity-90"
           >
             Post
           </button>
         </form>
-          )}
-          
-          {/* doing the feed */}
-          <div className="space-y-4">
-              {posts.map((post) => (
-                  <div key={post._id} className="bg-white p-4 rounded shadow">
-                      {/* Artisan info */}
-                      <div className="flex items-center gap-3 mb-3">
-                          {post.artisanId.profileImage && (
-                              <Image
-                                  src={post.artisanId.profileImage}
-                                  alt={post.artisanId.name}
-                                  width={40}
-                                  height={40}
-                                  className="rounded-full"
-                              />
-                          )}
-                          <Link
-                              href={`/artisans/${post.artisanId._id}`}
-                              className="font-semibold hover:underline"
-                          >
-                              {post.artisanId.name}
-                          </Link>
-                          <span className="text-gray-500 text-sm">
-                              {new Date(post.createdAt).toLocaleDateString()}
-                          </span>
-                      </div>
-                        
-                      {/* content of the post */}
-                      <p className="mb-3">{post.content}</p>
-                      {post.imageUrl && (
-                          <Image
-                              src={post.imageUrl}
-                              alt="Post Image"
-                              width={400}
-                              height={400}
-                              className="rounded mb-3"
-                          />
-                      )}
+      )}
 
-                      {/* optional link */}
-                      {post.linkUrl && (
-                          <a
-                              href={post.linkUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline"
-                          >
-                              {post.linkUrl}
-                          </a>
-                      )}
-                    </div>
-              ))}
+      {/* doing the feed */}
+      <div className="space-y-4">
+        {posts.map((post) => (
+          <div key={post._id} className="bg-white p-4 rounded shadow">
+            {/* Artisan info */}
+            <div className="flex items-center gap-3 mb-3">
+              {post.artisanId.profileImage && (
+                <Image
+                  src={post.artisanId.profileImage}
+                  alt={post.artisanId.name}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              )}
+              <Link
+                href={`/artisans/${post.artisanId._id}`}
+                className="font-semibold hover:underline"
+              >
+                {post.artisanId.name}
+              </Link>
+              <span className="text-gray-500 text-sm">
+                {new Date(post.createdAt).toLocaleDateString()}
+              </span>
+            </div>
+
+            {/* content of the post */}
+            <p className="mb-3">{post.content}</p>
+            {post.imageUrl && (
+              <Image
+                src={post.imageUrl}
+                alt="Post Image"
+                width={400}
+                height={400}
+                className="rounded mb-3"
+              />
+            )}
+
+            {/* optional link */}
+            {post.linkUrl && (
+              <a
+                href={post.linkUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                {post.linkUrl}
+              </a>
+            )}
           </div>
+        ))}
+      </div>
     </main>
   );
 }

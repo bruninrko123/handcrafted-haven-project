@@ -34,23 +34,6 @@ const Navbar = () => {
   return (
     <nav className="bg-gradient-to-r from-[#6f4e37] to-[#7a5a45] shadow-md">
       <div className="max-w-7xl mx-auto px-6 pt-4 flex items-center justify-between text-[#f5e6d3]">
-        {/* Auth */}
-        <div>
-          {isAuthenticated ? (
-            <div className="flex gap-5">
-              <button onClick={signOut}>
-                <LogOut size={18} />
-                Logout
-              </button>
-            </div>
-          ) : (
-            <button className="flex gap-3">
-              <Link href="/login">Login</Link>
-              <Link href="/signup">Sign up</Link>
-            </button>
-          )}
-        </div>
-
         <div className="flex gap-8 text-lg font-medium ">
           <Link href="/" className="hover:text-blue-300 text-2xl">
             Home
@@ -61,8 +44,8 @@ const Navbar = () => {
           <Link href="/artisans" className="hover:text-blue-300 text-2xl">
             Artisans
           </Link>
-          <Link href="/about" className="hover:text-blue-300 text-2xl">
-            Our Story
+          <Link href="/community" className="hover:text-blue-300 text-2xl">
+            Our Community
           </Link>
 
           {isArtisan && (
@@ -86,16 +69,33 @@ const Navbar = () => {
             <div className="flex gap-2 items-center">
               {profileImage && (
                 <Image
-                src={profileImage}
-                alt="Profile preview"
-                width={96}
-                height={96}
-                className="w-12 h-12 rounded-full object-cover mx-auto my-2"
+                  src={profileImage}
+                  alt="Profile preview"
+                  width={96}
+                  height={96}
+                  className="w-12 h-12 rounded-full object-cover mx-auto my-2"
                 />
               )}
               My Account
             </div>
           </Link>
+
+          {/* Auth */}
+          <div className='ml-8 -mr-20'>
+            {isAuthenticated ? (
+              <div className="flex gap-5">
+                <button onClick={signOut}>
+                  <LogOut size={18} />
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <button className="flex gap-3">
+                <Link href="/login">Login</Link>
+                <Link href="/signup">Sign up</Link>
+              </button>
+            )}
+          </div>
           {/* <button>
             <Menu size={24} />
           </button> */}
