@@ -14,10 +14,10 @@ export default function Account() {
   const [profileImage, setProfileImage] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const { data: session } = useSession();
-
+  const [originalEmail, setOriginalEmail] = useState("");
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
       const res = await fetch(`/api/artisans/${session?.user?.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -26,7 +26,7 @@ export default function Account() {
           name,
           email,
           profileImage,
-          currentPassword,
+          ...(email !== originalEmail && {currentPassword}),
         }),
       });
       
@@ -44,6 +44,7 @@ export default function Account() {
 
       setName(data.artisan.name || "");
       setEmail(data.artisan.email || "");
+      setOriginalEmail(data.artisan.email);
       setProfileImage(data.artisan.profileImage || "");
     }
 
@@ -65,30 +66,33 @@ export default function Account() {
           placeholder="Enter your full name"
           required
         />
-
-        <FormInput
-          id="email"
-          label="Email:"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="example@email.com"
-          required
-        />
-        <div>
+   
+      
           <FormInput
-            id="currentPassword"
-            label="Password:"
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            placeholder="Type your password"
+            id="email"
+            label="Email:"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="example@email.com"
             required
           />
-          <Link href="/account/change-password" className="block text-blue-800 -mt-4 text-sm">
-            Change Password
-          </Link>
-        </div>
+        {originalEmail !== email &&
+          <div>
+            <FormInput
+              id="currentPassword"
+              label="Password:"
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="Type your password"
+              required
+            />
+          </div>
+        }
+            <Link href="/account/change-password" className="block text-blue-800 -mt-4 text-sm">
+              Change Password
+            </Link>
         {profileImage && (
           <Image
             src={profileImage}
@@ -123,7 +127,7 @@ export default function Account() {
           }}
           className="w-full border p-2 rounded"
         />
-
+        
         <button
           disabled={uploading}
           type="submit"
