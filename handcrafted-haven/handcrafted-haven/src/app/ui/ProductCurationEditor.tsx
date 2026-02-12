@@ -51,16 +51,31 @@ export default function ProductCurationEditor({
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
-    );
-    
-    function handlerDragEnd(event: DragEndEvent) {
-        const { active, over } = event;
-        if (over && active.id !== over.id) {
-            setOrderedIds(prev => {
-                const oldIndex = prev.indexOf(active.id as string);
-                const newIndex = prev.indexOf(over.id as string);
-                return arrayMove(prev, oldIndex, newIndex);
-            })
-        }
+  );
+
+  function handlerDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setOrderedIds((prev) => {
+        const oldIndex = prev.indexOf(active.id as string);
+        const newIndex = prev.indexOf(over.id as string);
+        return arrayMove(prev, oldIndex, newIndex);
+      });
     }
+  }
+
+  function handleToggle(productId: string) {
+    setSelectedSet((prev) => {
+      const next = new Set(prev);
+      if (next.has(productId)) next.delete(productId);
+      else next.add(productId);
+      return next;
+    });
+  }
+
+  async function handlg save(){
+    setSaving(true);
+    setMessage("");
+    const 
+  }
 }
