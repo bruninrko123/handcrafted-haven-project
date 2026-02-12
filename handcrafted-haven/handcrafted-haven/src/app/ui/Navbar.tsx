@@ -84,7 +84,7 @@ const Navbar = () => {
           <div className='ml-8 -mr-20'>
             {isAuthenticated ? (
               <div className="flex gap-5">
-                <button onClick={signOut}>
+                <button onClick={() => signOut()}>
                   <LogOut size={18} />
                   Logout
                 </button>

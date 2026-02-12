@@ -28,6 +28,7 @@ export default function DashboardPage() {
   ];
 
   const [formData, setFormData] = useState<Product>(() => ({
+    artisanId: "",
     name: "",
     description: "",
     price: 0,
@@ -59,6 +60,7 @@ export default function DashboardPage() {
     }
 
     setFormData({
+      artisanId: "",
       name: "",
       description: "",
       price: 0,
