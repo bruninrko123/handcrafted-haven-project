@@ -52,7 +52,7 @@ const Navbar = () => {
 
           {isArtisan && (
             <Link href="/dashboard" className="hover:text-blue-300 text-2xl">
-              Dashboard
+              Add a Product
             </Link>
           )}
         </div>
@@ -87,7 +87,7 @@ const Navbar = () => {
           <div className='ml-8 -mr-20'>
             {isAuthenticated ? (
               <div className="flex gap-5">
-                <button onClick={signOut}>
+                <button onClick={() => signOut()}>
                   <LogOut size={18} />
                   Logout
                 </button>
