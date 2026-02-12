@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Product } from "@/types/product";
-
-
-
+import { useSession } from "next-auth/react";
+import ProductCurationEditor from "@/app/ui/ProductCurationEditor";
+import ProductCard from "@/app/ui/ProductCard";
 
 type Artisan = {
     _id: string;
@@ -15,6 +15,7 @@ type Artisan = {
     bio: string;
     specialty: string;
     profileImage: string;
+    profileProducts: string[];
 }
 
 export default function ArtisanProfilePage() {
@@ -24,6 +25,12 @@ export default function ArtisanProfilePage() {
     const [artisan, setArtisan] = useState<Artisan | null>(null);
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const { data: session } = useSession();
+    const [curatedProducts, setCuratedProducts] = useState<Product[]>([]);
+    const [editMode, setEditmode] = useState(false);
+
+    const isOwner = session?.user?.id === id;
+
 
     useEffect(() => {
         const fetchArtisan = async () => {
@@ -32,6 +39,7 @@ export default function ArtisanProfilePage() {
             const data = await res.json();
             setArtisan(data.artisan);
             setProducts(data.products);
+            setCuratedProducts(data.curatedProducts);
             setLoading(false);
         };
 
@@ -73,28 +81,43 @@ export default function ArtisanProfilePage() {
             
             {/* products section */}
 
-            <h2 className="text-2xl font-bold mb-4">Products by {artisan.name}</h2>
-            
-            {products.length === 0 ? (
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold">
+                    {editMode ? "Curate Your Products" : `Products by ${artisan.name}`}
+                </h2>
+                {isOwner && (
+                <button onClick={() => setEditmode(!editMode)}
+                    className="bg-[#6B4F3F] text-white px-4 py-2 rounded hover:opacity-90">
+                    {editMode ? "Done": "Edit"}
+                </button>
+                )}
+            </div>
 
-                <p className="text-gray-500">No products yet</p>
+            {editMode ? (
+                <ProductCurationEditor
+                    allProducts={products}
+                    initialSelected={artisan.profileProducts || []}
+                    artisanId={id}
+                />
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {products.map((product) => (
-                        <div key={product._id} className="bg-white p-4 rounded shadow">
-                            <Image
-                                src={product.imageUrl}
-                                alt={product.name}
-                                width={200}
-                                height={200}
-                                className="w-full h-48 object-cover rounded mb-2"
-                            />
-                            <h3 className="font-semibold">{product.name}</h3>
-                            <p className="text-gray-600">{product.price}</p>
-                        </div>
-                    ))}
-                </div>
+                    <>
+                        {curatedProducts.length > 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {curatedProducts.map((product) => (
+                                <ProductCard key={product._id} product={product} />
+                                ))}
+                            </div>
+                        ) : isOwner ? (
+                                <p className="text-gray-500">Click "Edit" to choose which products to feature.</p>
+                            ) : (
+                                    <p className="text-gray-500">No featured products yet.</p>
+                        )}
+                    </>
             )}
+
+
+
+            
             
       </main>
     );

@@ -8,7 +8,7 @@ export default function ProductsPage() {
   const { products } = useProducts();
 
   const [category, setCategory] = useState("All");
-  const [maxPrice, setMaxPrice] = useState(100); // Adjust later to fit your price range
+  const [maxPrice, setMaxPrice] = useState(5000); // Adjust later to fit your price range
 
   const filteredProducts = products.filter((product) => {
     const categoryMatch = category === "All" || product.category === category;

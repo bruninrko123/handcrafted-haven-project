@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 
+
 const Navbar = () => {
 
   const { isAuthenticated, isArtisan, user, signOut, isLoading } = useAuth();
@@ -16,6 +17,7 @@ const Navbar = () => {
   const { data: session } = useSession();
   const [profileImage, setProfileImage] = useState("");
 
+  
   useEffect(() => {
       const fetchUser = async () => {
         if (!session?.user?.id) return;
@@ -64,21 +66,22 @@ const Navbar = () => {
               </span>
             </Link>
           </button>
-
-          <Link href="/account">
-            <div className="flex gap-2 items-center">
-              {profileImage && (
-                <Image
-                  src={profileImage}
-                  alt="Profile preview"
-                  width={96}
-                  height={96}
-                  className="w-12 h-12 rounded-full object-cover mx-auto my-2"
-                />
-              )}
-              My Account
-            </div>
-          </Link>
+          {session?.user &&
+            <Link href="/account">
+              <div className="flex gap-2 items-center">
+                {profileImage && (
+                  <Image
+                    src={profileImage}
+                    alt="Profile preview"
+                    width={96}
+                    height={96}
+                    className="w-12 h-12 rounded-full object-cover mx-auto my-2"
+                  />
+                )}
+                {session.user?.name}
+              </div>
+            </Link>
+          }
 
           {/* Auth */}
           <div className='ml-8 -mr-20'>

@@ -3,6 +3,8 @@ import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/models/User";
 import Product from "@/models/Product";
 import bcrypt from "bcryptjs";
+import { Product as ProductType } from "@/types/product";
+import mongoose from "mongoose";
 
 export async function GET(
   request: Request,
@@ -24,10 +26,21 @@ export async function GET(
 
     // Get products created by this artisan
     const products = await Product.find({ artisanId: id });
+    let curatedProducts: ProductType[] = [];
+
+    if (artisan.profileProducts && artisan.profileProducts.length > 0) {
+      const productMap = new Map(
+        products.map((p: ProductType) => [p._id!.toString(), p]),
+      );
+      curatedProducts = artisan.profileProducts
+        .map((pid: mongoose.Types.ObjectId) => productMap.get(pid.toString()))
+        .filter(Boolean);
+    }
 
     return NextResponse.json({
       artisan,
       products,
+      curatedProducts,
     });
   } catch (error) {
     console.error("Error fetching artisan:", error);
@@ -64,7 +77,6 @@ export async function PUT(
           { status: 400 },
         );
       }
-    
 
       const isValid = await bcrypt.compare(currentPassword, user.password);
 

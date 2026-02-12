@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { updateAccountSchema } from "@/lib/validations/auth";
 
-
+type FieldErrors = {
+  name?: string;
+  email?: string;
+};
 
 export default function Account() {
   const [name, setName] = useState("");
@@ -15,9 +19,30 @@ export default function Account() {
   const [currentPassword, setCurrentPassword] = useState("");
   const { data: session } = useSession();
   const [originalEmail, setOriginalEmail] = useState("");
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [serverError, setServerError] = useState("");
+  const [success, setSuccess] = useState("");
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+     setErrors({});
+    setServerError("");
+    setSuccess("");
     
+    const result = updateAccountSchema.safeParse({ name, email });
+
+    if (!result.success) {
+      const fieldErrors: FieldErrors = {};
+      result.error.issues.forEach((err) => {
+        const field = err.path[0] as keyof FieldErrors;
+        fieldErrors[field] = err.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
       const res = await fetch(`/api/artisans/${session?.user?.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -30,10 +55,14 @@ export default function Account() {
         }),
       });
       
-      if (res.ok) {
-          alert("Profile updated!");
+    const data = await res.json();
+      if (!res.ok) {
+        setServerError(data.error || "Something went wrong");
+        return;
       }
+      setSuccess("Profile updated successfully!!");
   };
+
 
   useEffect(() => {
     const fetchUser = async () => {
