@@ -50,7 +50,7 @@ const Navbar = () => {
 
           {isArtisan && (
             <Link href="/dashboard" className="hover:text-blue-300 text-2xl">
-              Dashboard
+              Add a Product
             </Link>
           )}
         </div>
