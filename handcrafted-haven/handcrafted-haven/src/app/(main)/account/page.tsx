@@ -4,8 +4,12 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { updateAccountSchema } from "@/lib/validations/auth";
 
-
+type FieldErrors = {
+  name?: string;
+  email?: string;
+};
 
 export default function Account() {
   const [name, setName] = useState("");
@@ -15,9 +19,30 @@ export default function Account() {
   const [currentPassword, setCurrentPassword] = useState("");
   const { data: session } = useSession();
   const [originalEmail, setOriginalEmail] = useState("");
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [serverError, setServerError] = useState("");
+  const [success, setSuccess] = useState("");
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+     setErrors({});
+    setServerError("");
+    setSuccess("");
     
+    const result = updateAccountSchema.safeParse({ name, email });
+
+    if (!result.success) {
+      const fieldErrors: FieldErrors = {};
+      result.error.issues.forEach((err) => {
+        const field = err.path[0] as keyof FieldErrors;
+        fieldErrors[field] = err.message;
+      });
+      setErrors(fieldErrors);
+      return;
+    }
+
       const res = await fetch(`/api/artisans/${session?.user?.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -30,10 +55,14 @@ export default function Account() {
         }),
       });
       
-      if (res.ok) {
-          alert("Profile updated!");
+    const data = await res.json();
+      if (!res.ok) {
+        setServerError(data.error || "Something went wrong");
+        return;
       }
+      setSuccess("Profile updated successfully!!");
   };
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -66,33 +95,43 @@ export default function Account() {
           placeholder="Enter your full name"
           required
         />
-   
-      
-          <FormInput
-            id="email"
-            label="Email:"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="example@email.com"
-            required
-          />
-        {originalEmail !== email &&
-          <div>
-            <FormInput
-              id="currentPassword"
-              label="Password:"
-              type="password"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Type your password"
-              required
-            />
-          </div>
-        }
-            <Link href="/account/change-password" className="block text-blue-800 -mt-4 text-sm">
-              Change Password
-            </Link>
+        {errors.name && (
+          <p className="text-red-500 text-sm -mt-4 mb-4">{errors.name}</p>
+        )}
+
+        <FormInput
+          id="email"
+          label="Email:"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="example@email.com"
+          required
+        />
+        {originalEmail !== email && (
+          <>
+            <div>
+              <FormInput
+                id="currentPassword"
+                label="Password:"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Type your password"
+                required
+              />
+            </div>
+          </>
+        )}
+        {errors.email && (
+          <p className="text-red-500 text-sm -mt-4 mb-4">{errors.email}</p>
+        )}
+        <Link
+          href="/account/change-password"
+          className="block text-blue-800 -mt-4 text-sm"
+        >
+          Change Password
+        </Link>
         {profileImage && (
           <Image
             src={profileImage}
@@ -127,7 +166,11 @@ export default function Account() {
           }}
           className="w-full border p-2 rounded"
         />
-        
+        {serverError && (
+          <p className="text-red-600 text-sm mb-3">{serverError}</p>
+        )}
+        {success && <p className="text-green-800 text-sm mb-3">{success}</p>}
+
         <button
           disabled={uploading}
           type="submit"
