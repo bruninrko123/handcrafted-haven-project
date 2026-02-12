@@ -23,14 +23,13 @@ export default function Account() {
   const [serverError, setServerError] = useState("");
   const [success, setSuccess] = useState("");
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-     setErrors({});
+    setErrors({});
     setServerError("");
     setSuccess("");
-    
+
     const result = updateAccountSchema.safeParse({ name, email });
 
     if (!result.success) {
@@ -43,26 +42,24 @@ export default function Account() {
       return;
     }
 
-      const res = await fetch(`/api/artisans/${session?.user?.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        // body: JSON.stringify({ name, email, profileImage, ...(password && {password}) }),
-        body: JSON.stringify({
-          name,
-          email,
-          profileImage,
-          ...(email !== originalEmail && {currentPassword}),
-        }),
-      });
-      
-    const data = await res.json();
-      if (!res.ok) {
-        setServerError(data.error || "Something went wrong");
-        return;
-      }
-      setSuccess("Profile updated successfully!!");
-  };
+    const res = await fetch(`/api/artisans/${session?.user?.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name,
+        email,
+        profileImage,
+        ...(email !== originalEmail && { currentPassword }),
+      }),
+    });
 
+    const data = await res.json();
+    if (!res.ok) {
+      setServerError(data.error || "Something went wrong");
+      return;
+    }
+    setSuccess("Profile updated successfully!!");
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -75,10 +72,10 @@ export default function Account() {
       setEmail(data.artisan.email || "");
       setOriginalEmail(data.artisan.email);
       setProfileImage(data.artisan.profileImage || "");
-    }
+    };
 
     fetchUser();
-  }, [session])
+  }, [session]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f5e6d3] via-[#f0d9c2] to-[#e7c9ad] flex items-center justify-center px-4 py-12">
@@ -108,6 +105,9 @@ export default function Account() {
             placeholder="Enter your full name"
             required
           />
+          {errors.name && (
+            <p className="text-red-500 text-sm -mt-4 mb-4">{errors.name}</p>
+          )}
 
           <FormInput
             id="email"
@@ -118,6 +118,10 @@ export default function Account() {
             placeholder="example@email.com"
             required
           />
+          {errors.email && (
+            <p className="text-red-500 text-sm -mt-4 mb-4">{errors.email}</p>
+          )}
+
           {originalEmail !== email && (
             <FormInput
               id="currentPassword"
@@ -172,6 +176,12 @@ export default function Account() {
             }}
             className="mb-4 block w-full rounded-lg border border-[#d9c3aa] bg-white/90 px-3 py-2 text-sm text-[#3b2a1a] file:mr-3 file:rounded-md file:border-0 file:bg-[#6B4F3F] file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:opacity-90"
           />
+
+          {serverError && (
+            <p className="text-red-600 text-sm mb-3">{serverError}</p>
+          )}
+          {success && <p className="text-green-800 text-sm mb-3">{success}</p>}
+
 
           <button
             disabled={uploading}
