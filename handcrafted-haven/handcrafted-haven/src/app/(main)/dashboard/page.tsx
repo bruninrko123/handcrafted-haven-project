@@ -28,6 +28,7 @@ export default function DashboardPage() {
   ];
 
   const [formData, setFormData] = useState<Product>(() => ({
+    artisanId: "",
     name: "",
     description: "",
     price: 0,
@@ -59,6 +60,7 @@ export default function DashboardPage() {
     }
 
     setFormData({
+      artisanId: "",
       name: "",
       description: "",
       price: 0,
@@ -210,11 +212,14 @@ export default function DashboardPage() {
       </form>
 
       {/* PRODUCT LIST */}
-      <div className="space-y-4">
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Your Products</h2>
+      </div>
+      <div className="grid gird-cols-1 md:grid-cols2 lg:grid-cols-3 gap-4">
         {products.map((product) => (
           <div
             key={product._id}
-            className="bg-white p-4 rounded shadow flex gap-4"
+            className="bg-white p-4 rounded shadow"
           >
             <Image
               src={
