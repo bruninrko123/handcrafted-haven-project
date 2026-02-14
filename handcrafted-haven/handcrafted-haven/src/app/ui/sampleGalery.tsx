@@ -1,9 +1,10 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SampleGalery() {
   const [firstImgIndex, setFirstImgIndex] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
   interface Gallery {
     images: {
       path: string;
@@ -99,14 +100,14 @@ export default function SampleGalery() {
             onClick={handlePrevious}
             className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md p-4 rounded-full shadow-lg hover:scale-110 transition"
           >
-            ←
+            &larr;
           </button>
 
           <button
             onClick={handleNext}
             className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md p-4 rounded-full shadow-lg hover:scale-110 transition"
           >
-            →
+            &rarr;
           </button>
         </div>
       </section>
