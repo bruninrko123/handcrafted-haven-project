@@ -36,22 +36,22 @@ const Navbar = () => {
   return (
     <nav className="bg-gradient-to-r from-[#6f4e37] to-[#7a5a45] shadow-md">
       <div className="max-w-7xl mx-auto px-6 pt-4 flex items-center justify-between text-[#f5e6d3]">
-        <div className="flex gap-8 text-lg font-medium ">
-          <Link href="/" className="hover:text-blue-300 text-2xl">
-            Home
+        <div className="flex items-center gap-8 font-medium">
+          <Link href="/" className="flex h-10 w-10 items-center justify-center rounded-full border border-white text-white font-semibold text-sm hover:bg-white hover:text-[#6f4e37] transition">
+            HH
           </Link>
-          <Link href="/products" className="hover:text-blue-300 text-2xl">
+          <Link href="/products" className="text-lg hover:text-[#e2cdb4] transition">
             Products
           </Link>
-          <Link href="/artisans" className="hover:text-blue-300 text-2xl">
+          <Link href="/artisans" className="text-lg hover:text-[#e2cdb4] transition">
             Artisans
           </Link>
-          <Link href="/community" className="hover:text-blue-300 text-2xl">
+          <Link href="/community" className="text-lg hover:text-[#e2cdb4] transition">
             Our Community
           </Link>
 
           {isArtisan && (
-            <Link href="/dashboard" className="hover:text-blue-300 text-2xl">
+            <Link href="/dashboard" className="text-lg hover:text-[#e2cdb4] transition">
               Add a Product
             </Link>
           )}

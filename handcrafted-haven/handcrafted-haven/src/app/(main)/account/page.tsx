@@ -9,6 +9,7 @@ import { updateAccountSchema } from "@/lib/validations/auth";
 type FieldErrors = {
   name?: string;
   email?: string;
+  story?: string;
 };
 
 export default function Account() {
@@ -22,6 +23,7 @@ export default function Account() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [serverError, setServerError] = useState("");
   const [success, setSuccess] = useState("");
+  const [story, setStory] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +32,7 @@ export default function Account() {
     setServerError("");
     setSuccess("");
 
-    const result = updateAccountSchema.safeParse({ name, email });
+    const result = updateAccountSchema.safeParse({ name, email, story });
 
     if (!result.success) {
       const fieldErrors: FieldErrors = {};
@@ -49,6 +51,7 @@ export default function Account() {
         name,
         email,
         profileImage,
+        story,
         ...(email !== originalEmail && { currentPassword }),
       }),
     });
@@ -72,6 +75,7 @@ export default function Account() {
       setEmail(data.artisan.email || "");
       setOriginalEmail(data.artisan.email);
       setProfileImage(data.artisan.profileImage || "");
+      setStory(data.artisan.story || "");
     };
 
     fetchUser();
@@ -121,6 +125,28 @@ export default function Account() {
           {errors.email && (
             <p className="text-red-500 text-sm -mt-4 mb-4">{errors.email}</p>
           )}
+
+          <label
+            htmlFor="story"
+            className="block text-sm font-medium text-[#4b3621] mb-1"
+          >
+            Your short story:
+          </label>
+          <textarea
+            id="story"
+            value={story}
+            onChange={(e) => setStory(e.target.value)}
+            placeholder="Share a short story about your craft..."
+            maxLength={280}
+            rows={4}
+            className="block w-full rounded-lg border border-[#d9c3aa] bg-white/90 px-3 py-2 text-sm text-[#3b2a1a] shadow-sm placeholder:text-[#9a8773] focus:outline-none focus:ring-2 focus:ring-[#6b4f3f] focus:border-transparent mb-1"
+          />
+          {errors.story && (
+            <p className="text-red-500 text-sm -mt-1 mb-2">{errors.story}</p>
+          )}
+          <p className="text-xs text-[#6b4f3f] mb-4">
+            {story.length}/280
+          </p>
 
           {originalEmail !== email && (
             <FormInput

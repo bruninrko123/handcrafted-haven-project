@@ -7,7 +7,7 @@ export async function GET() {
     await connectToDatabase();
     // Find all users with role "artisan". Do not select password (we don't want to show it)
     const artisans = await User.find({ role: "artisan" }).select(
-      "_id name email bio specialty profileImage",
+      "_id name email bio specialty profileImage story",
     );
 
     return NextResponse.json(artisans);

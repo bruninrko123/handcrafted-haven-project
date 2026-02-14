@@ -50,7 +50,10 @@ export const updateAccountSchema = z.object({
 
   email: z.string().email("Please enter a valid email"),
 
-  
+  story: z
+    .string()
+    .max(280, "Story must be 280 characters or less")
+    .optional(),
 });
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;

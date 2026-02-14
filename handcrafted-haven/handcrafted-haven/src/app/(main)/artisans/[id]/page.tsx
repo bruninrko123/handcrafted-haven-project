@@ -16,6 +16,7 @@ type Artisan = {
     specialty: string;
     profileImage: string;
     profileProducts: string[];
+    story?: string;
 }
 
 export default function ArtisanProfilePage() {
@@ -76,6 +77,12 @@ export default function ArtisanProfilePage() {
                 </div>
                 {artisan.bio && (
                     <p className="mt-4 text-gray-700">{artisan.bio}</p>
+                )}
+                {artisan.story && (
+                    <div className="mt-4">
+                        <h2 className="text-lg font-semibold text-gray-800">Story</h2>
+                        <p className="text-gray-700">{artisan.story}</p>
+                    </div>
                 )}
             </div>
             
