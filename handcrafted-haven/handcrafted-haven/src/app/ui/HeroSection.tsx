@@ -1,44 +1,87 @@
-import React from 'react';
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+
+const images = ["/images/heroLarge.png", "/images/hero-image.png"];
 
 const HeroSection = () => {
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev === 0 ? 1 : 0));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <>
-      <section>
-        <div>
-          <div>
-            <h1 className="text-4xl text-center">
-              Discover Unique <span>Handcrafted</span> Treasures
-            </h1>
+    <section className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
+      
+      {/* Background Images */}
+      {images.map((img, index) => (
+        <img
+          key={index}
+          src={img}
+          alt="Hero Background"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+            index === currentImage ? "opacity-100" : "opacity-0"
+          }`}
+        />
+      ))}
 
-            <p className="text-center">
-              Handcrafted Haven connects passionate artisans with discerning
-              buyers who appreciate the beauty, quality, and story behind every
-              handmade creation. Join our thriving community of makers and
-              collectors.
-            </p>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/60"></div>
 
-            <div className="w-[600px] grid place-items-left grid-cols-2  grid-rows-2 gap-x-1 justify-self-center mb-10 mt-10">
-              <div className="border p-2 col-start-1 col-end-2 row-start-1 row-end-2">
-                <div>500+</div>
-                <div>Artisans</div>
+      {/* Content */}
+      <div className="relative z-10 text-center text-white max-w-5xl">
+        <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+          Discover Unique{" "}
+          <span className="text-[#e2cdb4]">Handcrafted</span> Treasures
+        </h1>
+
+        <p className="mt-4 text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
+          Handcrafted Haven connects passionate artisans with discerning buyers
+          who appreciate the beauty, quality, and story behind every handmade
+          creation.
+        </p>
+
+        {/* Statistics */}
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
+          {[
+            { value: "500+", label: "Artisans" },
+            { value: "10K+", label: "Unique Items" },
+            { value: "50K+", label: "Happy Customers" },
+            { value: "4.9★", label: "Average Rating" },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:scale-105 transition-transform duration-300"
+            >
+              <div className="text-3xl md:text-4xl font-bold text-[#e2cdb4]">
+                {stat.value}
               </div>
-              <div className="border p-2 col-start-1 col-end-2 row-start-2 row-end-3 ">
-                <div>10K+</div>
-                <div>Unique Items</div>
-              </div>
-              <div className="border p-2 col-start-2 col-end-3 row-start-1 row-end-2">
-                <div>50K+</div>
-                <div>Happy Customers</div>
-              </div>
-              <div className="border p-2 col-start-2 col-end-3 row-start-2 row-end-3">
-                <div>4.9★</div>
-                <div>Average Rating</div>
+              <div className="text-sm md:text-base text-gray-200 mt-2">
+                {stat.label}
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      </section>
-    </>
+
+        {/* CTA Button */}
+        <div className="mt-10 mb-12 flex justify-center">
+          <Link
+          href="/products"
+          className="px-8 py-4 bg-[#e2cdb4] text-[#3e2c23] font-semibold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+        >
+          Explore Products
+        </Link>
+        </div>
+
+
+      </div>
+    </section>
   );
 };
 

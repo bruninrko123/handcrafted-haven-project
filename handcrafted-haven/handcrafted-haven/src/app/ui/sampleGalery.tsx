@@ -59,32 +59,56 @@ export default function SampleGalery() {
     <>
       {/* populaing the gallery */}
       {}
-      <section className="relative flex">
-        <section className="flex w-full">
-          {myGallery.images
-            .slice(firstImgIndex, firstImgIndex + 3)
-            .map((image, index) => (
-              <Image
-                src={image.path}
-                alt={image.title}
-                key={index}
-                width={500}
-                height={400}
-              />
-            ))}
-        </section>
-        <button
-          onClick={handlePrevious}
-          className="absolute left-0 top-1/2 -translate-y-1/2 text-3xl border rounded-3xl bg-blue-300 p-3"
-        >
-          {`<<`}
-        </button>
-        <button
-          onClick={handleNext}
-          className="absolute right-7 top-1/2 -translate-y-1/2 text-3xl rounded-3xl bg-blue-300 p-3"
-        >
-          {`>>`}
-        </button>
+      <section className="relative py-16 bg-[#f8f5f2] overflow-hidden">
+        <div className="max-w-6xl mx-auto px-6">
+
+          {/* Gallery Grid */}
+          <div className="flex gap-6 justify-center transition-all duration-200">
+            {myGallery.images
+              .slice(firstImgIndex, firstImgIndex + 3)
+              .map((image, index) => (
+                <div
+                  key={index}
+                  className="relative group w-[300px] h-[350px] rounded-2xl overflow-hidden shadow-lg bg-white"
+                >
+                  <Image
+                    src={image.path}
+                    alt={image.title}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+
+                  {/* Dark Overlay */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+
+                  {/* Text Overlay */}
+                  <div className="absolute bottom-0 left-0 p-4 text-white opacity-0 group-hover:opacity-100 transition duration-300">
+                    <h3 className="font-semibold text-lg">
+                      {image.title}
+                    </h3>
+                    <p className="text-sm text-gray-200">
+                      by {image.author}
+                    </p>
+                  </div>
+                </div>
+              ))}
+          </div>
+
+          {/* Navigation Buttons */}
+          <button
+            onClick={handlePrevious}
+            className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md p-4 rounded-full shadow-lg hover:scale-110 transition"
+          >
+            ←
+          </button>
+
+          <button
+            onClick={handleNext}
+            className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur-md p-4 rounded-full shadow-lg hover:scale-110 transition"
+          >
+            →
+          </button>
+        </div>
       </section>
     </>
   );
