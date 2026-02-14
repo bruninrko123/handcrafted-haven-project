@@ -13,6 +13,7 @@ export default function ArtisansList() {
     bio: string;
     specialty: string;
     profileImage: string;
+    story: string;
   };
 
   const [artisans, setArtisans] = useState<Artisan[]>([]);
@@ -88,7 +89,7 @@ export default function ArtisansList() {
                 </p>
 
                 <p className="text-gray-600 mt-4 leading-relaxed line-clamp-3">
-                  {artisan.bio}
+                  {artisan.story || artisan.bio}
                 </p>
 
                 <p className="text-sm text-gray-400 mt-4">

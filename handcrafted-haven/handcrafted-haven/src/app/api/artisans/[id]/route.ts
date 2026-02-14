@@ -17,7 +17,7 @@ export async function GET(
 
     // Get artisan info (without password)
     const artisan = await User.findById(id).select(
-      "_id name email bio specialty profileImage profileProducts",
+      "_id name email bio specialty profileImage profileProducts story",
     );
 
     if (!artisan) {
@@ -57,11 +57,19 @@ export async function PUT(
 ) {
   try {
     const data = await request.json();
-    const { name, email, profileImage, currentPassword } = data;
+    const { name, email, profileImage, currentPassword, story } = data;
+    const trimmedStory =
+      typeof story === "string" ? story.trim() : story;
 
     if (!name || !email) {
       return NextResponse.json(
         { error: "Name and Email are required" },
+        { status: 400 },
+      );
+    }
+    if (trimmedStory && trimmedStory.length > 280) {
+      return NextResponse.json(
+        { error: "Story must be 280 characters or less" },
         { status: 400 },
       );
     }
@@ -88,7 +96,12 @@ export async function PUT(
       }
     }
 
-    const updateData: Record<string, string> = { name, email, profileImage };
+    const updateData: Record<string, string> = {
+      name,
+      email,
+      profileImage,
+      story: trimmedStory || "",
+    };
 
     const updatedUserInfo = await User.findByIdAndUpdate(id, updateData, {
       new: true,
@@ -97,6 +110,12 @@ export async function PUT(
     if (!updatedUserInfo) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
+
+    console.log("Updated artisan story", {
+      id,
+      hasStory: Boolean(updatedUserInfo.story),
+      storyLength: updatedUserInfo.story?.length ?? 0,
+    });
 
     return NextResponse.json(updatedUserInfo);
   } catch (error) {

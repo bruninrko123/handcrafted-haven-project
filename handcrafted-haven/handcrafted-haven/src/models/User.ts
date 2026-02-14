@@ -14,6 +14,14 @@ const UserSchema = new Schema({
         type: String,
         default: "",
     },
+    story: {
+        type: String,
+        default: "",
+    },
+    story: {
+        type: String,
+        default: "",
+    },
     profileProducts: [{
         type: Schema.Types.ObjectId,
         ref: "Product",
