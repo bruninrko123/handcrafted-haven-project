@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import ProductCard from "@/app/ui/ProductCard";
-import { products } from "@/data/products";
 import { useProducts } from "@/context/ProductContext";
 
 export default function ProductsPage() {
@@ -20,20 +19,20 @@ export default function ProductsPage() {
 
 
   return (
-    <main className="p-6">
-      <h1 className="text-3xl font-bold">
+    <section className="p-8 sm:py-10">
+      <h1 className="text-2xl sm:text-3xl font-bold">
         Products
       </h1>
       
 
       {/* Filters */}
 
-      <section className="mb-6 flex flex-col sm:flex-row gap-4">
+      <section className="mt-6 mb-8 flex flex-col lg:flex-row gap-4 items-start lg:items-center">
         {/* Category Filter */}
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="border rounded-md p-2"
+          className="border rounded-md p-2 w-full sm:w-72"
         >
           <option value="All">All Categories</option>
           <option value="Home Decor">Home Decor</option>
@@ -48,8 +47,8 @@ export default function ProductsPage() {
         </select>
     
         {/* Price Filter */}
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full lg:w-auto">
+          <label className="text-sm text-gray-600 whitespace-nowrap">
             Max Price: ${maxPrice}
           </label>
           <input
@@ -59,7 +58,7 @@ export default function ProductsPage() {
             step="5"
             value={maxPrice}
             onChange={(e) => setMaxPrice(Number(e.target.value))}
-            className="w-40"
+            className="w-full sm:w-56"
           />
         </div>
       </section>
@@ -69,6 +68,6 @@ export default function ProductsPage() {
           <ProductCard key={product._id} product={product} />
         ))}
       </section>
-    </main>
+    </section>
   );
 }
