@@ -45,15 +45,15 @@ export default function ArtisansList() {
     );
 
   return (
-    <section className="bg-[#f8f5f2] min-h-screen py-16 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section className="full-bleed bg-[#f8f5f2] min-h-screen py-12 sm:py-16">
+      <div className="w-full">
 
         {/* Page Header */}
         <div className="text-center mb-14">
           <p className="uppercase tracking-widest text-sm text-[#6B4F3F] mb-3">
             Meet the Makers
           </p>
-          <h1 className="text-4xl md:text-5xl font-bold text-[#3e2c23]">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#3e2c23]">
             Our Artisans
           </h1>
           <div className="w-24 h-1 bg-[#e2cdb4] mx-auto mt-5 rounded-full"></div>
@@ -67,7 +67,7 @@ export default function ArtisansList() {
               className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center"
             >
               {/* Image */}
-              <div className="relative w-40 h-40 shrink-0">
+              <div className="relative w-28 h-28 sm:w-40 sm:h-40 shrink-0">
                 <Image
                   src={artisan.profileImage}
                   alt={artisan.name}
@@ -79,7 +79,7 @@ export default function ArtisansList() {
               {/* Content */}
               <div className="flex-1 text-center md:text-left">
                 <Link href={`/artisans/${artisan._id}`}>
-                  <h2 className="text-2xl md:text-3xl font-semibold text-[#3e2c23] hover:text-[#6B4F3F] transition">
+                  <h2 className="text-2xl sm:text-3xl font-semibold text-[#3e2c23] hover:text-[#6B4F3F] transition">
                     {artisan.name}
                   </h2>
                 </Link>
@@ -92,7 +92,7 @@ export default function ArtisansList() {
                   {artisan.story || artisan.bio}
                 </p>
 
-                <p className="text-sm text-gray-400 mt-4">
+                <p className="text-sm text-gray-400 mt-4 break-words">
                   {artisan.email}
                 </p>
 
