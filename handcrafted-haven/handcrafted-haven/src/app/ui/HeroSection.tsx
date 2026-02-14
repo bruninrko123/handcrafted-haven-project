@@ -17,7 +17,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
+    <section className="relative min-h-[80vh] sm:min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16 sm:py-20 overflow-hidden">
       
       {/* Background Images */}
       {images.map((img, index) => (
@@ -36,7 +36,7 @@ const HeroSection = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center text-white max-w-5xl">
-        <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
           Discover Unique{" "}
           <span className="text-[#e2cdb4]">Handcrafted</span> Treasures
         </h1>
@@ -48,7 +48,7 @@ const HeroSection = () => {
         </p>
 
         {/* Statistics */}
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="mt-10 sm:mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {[
             { value: "500+", label: "Artisans" },
             { value: "10K+", label: "Unique Items" },
