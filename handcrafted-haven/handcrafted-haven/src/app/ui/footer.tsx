@@ -5,12 +5,12 @@ export default function Footer() {
 
   return (
     <footer className="mt-10 border-t border-[#d9c8b8] bg-[#f5e6d3] text-[#4b3526]">
-      <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-4 px-6 py-6">
+      <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-4 px-4 sm:px-6 py-6 text-center sm:text-left">
         <p className="text-sm font-medium">(c) {currentYear} Handcrafted Haven</p>
 
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-4 sm:gap-5">
           <a
-            href="#"
+            href="https://www.instagram.com/"
             aria-label="Instagram"
             className="opacity-90 transition hover:opacity-100"
           >
@@ -23,7 +23,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="#"
+            href="https://x.com/?lang=es"
             aria-label="X / Twitter"
             className="opacity-90 transition hover:opacity-100"
           >
@@ -31,7 +31,7 @@ export default function Footer() {
           </a>
 
           <a
-            href="#"
+            href="https://www.whatsapp.com/?lang=es"
             aria-label="WhatsApp"
             className="opacity-90 transition hover:opacity-100"
           >

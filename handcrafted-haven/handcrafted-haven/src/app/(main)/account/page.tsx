@@ -82,8 +82,8 @@ export default function Account() {
   }, [session]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f5e6d3] via-[#f0d9c2] to-[#e7c9ad] flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
+    <section className="min-h-screen full-bleed bg-gradient-to-br from-[#f5e6d3] via-[#f0d9c2] to-[#e7c9ad] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+      <div className="w-full max-w-md sm:max-w-lg">
         <div className="mb-6 text-center">
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-[#6b4f3f] text-[#6b4f3f] text-sm font-semibold">
             HH
@@ -98,7 +98,7 @@ export default function Account() {
 
         <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-[#e2cdb4] bg-white/80 p-6 shadow-xl backdrop-blur"
+          className="rounded-2xl border border-[#e2cdb4] bg-white/80 p-5 sm:p-6 shadow-xl backdrop-blur"
         >
           <FormInput
             id="name"
@@ -218,6 +218,6 @@ export default function Account() {
           </button>
         </form>
       </div>
-    </div>
+    </section>
   );
 }

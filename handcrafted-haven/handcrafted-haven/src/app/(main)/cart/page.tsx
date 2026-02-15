@@ -44,11 +44,12 @@ export default function CartPage() {
                 className="w-20 h-20 object-cover rounded"
               />
 
+
               {/* PRODUCT INFO */}
-              <div className="flex-1">
-                <h2 className="text-lg font-semibold">{item.name}</h2>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg font-semibold break-words">{item.name}</h2>
                 <p className="text-sm text-gray-600">
-                  ${item.price} × {item.quantity}
+                  ${item.price} x {item.quantity}
                 </p>
                 <p className="font-medium">
                   Total: ${(item.price * item.quantity).toFixed(2)}
@@ -61,7 +62,7 @@ export default function CartPage() {
                   onClick={() => decreaseQuantity(item._id!)}
                   className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                 >
-                  −
+                  -
                 </button>
 
                 <span className="font-medium">{item.quantity}</span>
