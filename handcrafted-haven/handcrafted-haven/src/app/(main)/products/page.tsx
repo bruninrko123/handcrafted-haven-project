@@ -14,8 +14,8 @@ export default function ProductsPage() {
     const categoryMatch = category === "All" || product.category === category;
 
     const priceMatch = product.price <= maxPrice;
-
-    return categoryMatch && priceMatch;
+    const visibleInStore = product.showInStore !== false;
+    return categoryMatch && priceMatch && visibleInStore;
   });
 
 

@@ -11,11 +11,13 @@ export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const { isArtisan } = useAuth();
+  const { isArtisan, user } = useAuth();
 
   if (!isArtisan) {
     redirect("/");
   }
+
+  const myProducts = products.filter((p) => p.artisanId === user?.id);
 
   const CATEGORIES = [
     "Home Decor",
@@ -199,15 +201,14 @@ export default function DashboardPage() {
                 className="hidden"
               />
             </label>
-          <button
-            type="submit"
-            disabled={uploading}
-            className="bg-[#6B4F3F] text-white px-6 py-2 rounded hover:opacity-90"
-          >
-            {editingProductId ? "Update Product" : "Add Product"}
-          </button>
+            <button
+              type="submit"
+              disabled={uploading}
+              className="bg-[#6B4F3F] text-white px-6 py-2 rounded hover:opacity-90"
+            >
+              {editingProductId ? "Update Product" : "Add Product"}
+            </button>
           </div>
-
         </div>
       </form>
 
@@ -216,11 +217,8 @@ export default function DashboardPage() {
         <h2 className="text-xl font-semibold mb-4">Your Products</h2>
       </div>
       <div className="grid gird-cols-1 md:grid-cols2 lg:grid-cols-3 gap-4">
-        {products.map((product) => (
-          <div
-            key={product._id}
-            className="bg-white p-4 rounded shadow"
-          >
+        {myProducts.map((product) => (
+          <div key={product._id} className="bg-white p-4 rounded shadow">
             <Image
               src={
                 product.imageUrl?.startsWith("http")
@@ -241,6 +239,23 @@ export default function DashboardPage() {
             </div>
 
             <div className="flex flex-col gap-2">
+              <button
+                onClick={() =>
+                  updateProduct({
+                    ...product,
+                    showInStore: product.showInStore !== false ? false : true,
+                  })
+                }
+                className={`text-sm ${
+                  product.showInStore !== false
+                    ? "text-green-600 hover:text-green-800"
+                    : "text-gray-400 hover:text-gray-600"
+                }`}
+              >
+                {product.showInStore !== false
+                  ? "visible in Store"
+                  : "Hidden from Store"}
+              </button>
               <button
                 onClick={() => {
                   setFormData(product);

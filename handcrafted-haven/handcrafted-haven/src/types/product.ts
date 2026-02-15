@@ -6,7 +6,8 @@ export type Product = {
   price: number;
   imageUrl: string;
   category: string;
-
+  showInStore?: boolean;
+  
   averageRating?: number;
   reviewCount?: number;
 };

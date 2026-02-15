@@ -25,6 +25,10 @@ const ProductSchema = new Schema({
     type: Number,
     required: true,
   },
+  showInStore: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 //create a new model if it doesn't exist
