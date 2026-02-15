@@ -64,10 +64,10 @@ export default function ChangePassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <section className="min-h-screen full-bleed bg-gradient-to-br from-[#f5e6d3] via-[#f0d9c2] to-[#e7c9ad] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-400 justify-self-center mt-5 w-[400px] rounded p-2"
+        className="w-full max-w-md sm:max-w-lg rounded-2xl border border-[#e2cdb4] bg-white/80 p-5 sm:p-6 shadow-xl backdrop-blur"
       >
         <FormInput
           id="currentPassword"
@@ -121,6 +121,6 @@ export default function ChangePassword() {
           Change Password
         </button>
       </form>
-    </div>
+    </section>
   );
 }
