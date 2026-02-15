@@ -46,8 +46,8 @@ export default function CartPage() {
 
 
               {/* PRODUCT INFO */}
-              <div className="flex-1">
-                <h2 className="text-lg font-semibold">{item.name}</h2>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg font-semibold break-words">{item.name}</h2>
                 <p className="text-sm text-gray-600">
                   ${item.price} x {item.quantity}
                 </p>
