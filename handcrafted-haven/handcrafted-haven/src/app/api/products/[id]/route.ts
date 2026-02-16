@@ -10,23 +10,12 @@ import Review from "@/models/Review";
    ========================= */
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } | Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDatabase();
 
-    const resolvedParams =
-      typeof (params as { then?: unknown })?.then === "function"
-        ? await (params as Promise<{ id: string }>)
-        : (params as { id: string });
-
-    const rawId = resolvedParams?.id;
-    const id =
-      typeof rawId === "string"
-        ? rawId.trim()
-        : Array.isArray(rawId)
-          ? rawId[0]?.trim()
-          : "";
+    const { id } = await params;
 
     if (!id) {
       return NextResponse.json(
@@ -35,7 +24,7 @@ export async function GET(
       );
     }
 
-    let productDoc = await Product.findById(id);
+    const productDoc = await Product.findById(id);
     let productObj = productDoc ? productDoc.toObject() : null;
 
     if (!productObj) {
