@@ -11,8 +11,11 @@ export default function DashboardPage() {
   const { products, addProduct, removeProduct, updateProduct } = useProducts();
   const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const { isArtisan, user } = useAuth();
+  const { isArtisan, isLoading, user } = useAuth();
 
+  if (isLoading) {
+    return <p className="p-6">Loading...</p>
+  }
   if (!isArtisan) {
     redirect("/");
   }
