@@ -157,20 +157,20 @@ export default function CommunityPage() {
               className="bg-white rounded-lg shadow-md overflow-hidden"
             >
               <div className="flex items-center gap-3 p-4">
-                {post.artisanId.profileImage && (
+                {post.artisanId?.profileImage && (
                   <Image
                     src={post.artisanId.profileImage}
-                    alt={post.artisanId.name}
+                    alt={post.artisanId.name ?? "Artisan"}
                     width={40}
                     height={40}
                     className="rounded-full"
                   />
                 )}
                 <Link
-                  href={`/artisans/${post.artisanId._id}`}
+                  href={`/artisans/${post.artisanId?._id ?? ""}`}
                   className="font-semibold hover:underline"
                 >
-                  {post.artisanId.name}
+                  {post.artisanId?.name ?? "Unknown artisan"}
                 </Link>
                 <span className="text-gray-500 text-sm ml-auto">
                   {new Date(post.createdAt).toLocaleDateString()}
