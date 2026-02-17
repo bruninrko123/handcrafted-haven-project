@@ -54,7 +54,7 @@ export default function ProductsPage() {
           <input
             type="range"
             min="0"
-            max="100"
+            max="5000"
             step="5"
             value={maxPrice}
             onChange={(e) => setMaxPrice(Number(e.target.value))}
