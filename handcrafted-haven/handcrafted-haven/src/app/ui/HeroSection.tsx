@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
-const images = ["/images/heroLarge.png", "/images/hero-image.png"];
+const images = ["/images/heroLarge.webp", "/images/hero-image.webp"];
 
 const HeroSection = () => {
   const [currentImage, setCurrentImage] = useState(0);
@@ -21,10 +22,12 @@ const HeroSection = () => {
       
       {/* Background Images */}
       {images.map((img, index) => (
-        <img
+        <Image
           key={index}
           src={img}
           alt="Hero Background"
+          width={512}
+          height={512}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
             index === currentImage ? "opacity-100" : "opacity-0"
           }`}
